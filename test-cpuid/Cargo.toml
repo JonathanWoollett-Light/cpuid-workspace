@@ -12,6 +12,7 @@ log-derive = "0.4.1" # For logging with `.covers()`
 log = "0.4.17"
 serde = {version="1.0.138",features=["derive"]}
 kvm-bindings = { version="0.5.0", features=["fam-wrappers"] }
+bit-fields = { path = "../bit-fields" }
 
 [dev-dependencies]
 simple_logger = "2.2.0"

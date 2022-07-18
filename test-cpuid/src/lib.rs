@@ -37,7 +37,7 @@ use std::collections::HashMap;
 use std::mem::transmute;
 use std::{fmt, str};
 mod bitflags_util;
-
+pub mod intel;
 mod cpuid_ffi;
 use bitflags::bitflags;
 #[allow(clippy::wildcard_imports)]

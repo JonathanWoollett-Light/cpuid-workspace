@@ -5,18 +5,18 @@
   },
   "leaf0x01_process_info_and_feature_bits": {
     "processor_version_information": {
-      "stepping_id": 1,
+      "model": 0,
+      "family_id": 15,
       "processor_type": 0,
       "extended_family_id": 8,
-      "extended_model_id": 6,
-      "model": 0,
-      "family_id": 15
+      "stepping_id": 1,
+      "extended_model_id": 6
     },
     "additional_information": {
       "brand_index": 0,
       "clflush_line_size": 8,
       "maximum_addressable_logical_processor_ids": 12,
-      "local_apic_id": 0
+      "local_apic_id": 2
     },
     "feature_information": {
       "ecx": "1111_1110_1101_1000_0011_0010_0000_0011",
@@ -53,9 +53,9 @@
     },
     "ebx": "0000_1010_0000_0000_1101_0000_0000_0101",
     "ecx": {
+      "number_of_physical_cores_minus_1": 11,
       "log2_of_maximum_apic_id": 7,
-      "performance_timestamp_counter_size": 0,
-      "number_of_physical_cores_minus_1": 11
+      "performance_timestamp_counter_size": 0
     }
   },
   "leaf0x8000_001F_cpuid_feature_bits": "0000_0000_0000_0000_0000_0000_0000_0000",

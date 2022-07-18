@@ -75,18 +75,18 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
         _ => unreachable!(),
     };
     for i in 0u8..bits_len {
-        write!(&mut struct_bits, "Bit<{struct_data_type},{i}>,").unwrap();
-        struct_new_bits.push_str("Bit(std::marker::PhantomData),");
+        write!(&mut struct_bits, "bit_fields::Bit<{struct_data_type},{i}>,").unwrap();
+        struct_new_bits.push_str("bit_fields::Bit(std::marker::PhantomData),");
         write!(
             &mut bit_index,
             "
-        impl BitIndex<{struct_data_type},{i}> for {struct_name} {{
-            fn bit(&self) -> &Bit<{struct_data_type},{i}> {{
+        impl bit_fields::BitIndex<{struct_data_type},{i}> for {struct_name} {{
+            fn bit(&self) -> &bit_fields::Bit<{struct_data_type},{i}> {{
                 &self.bits.{i}
             }}
         }}
-        impl BitIndexMut<{struct_data_type},{i}> for {struct_name} {{
-            fn bit_mut(&mut self) -> &mut Bit<{struct_data_type},{i}> {{
+        impl bit_fields::BitIndexMut<{struct_data_type},{i}> for {struct_name} {{
+            fn bit_mut(&mut self) -> &mut bit_fields::Bit<{struct_data_type},{i}> {{
                 &mut self.bits.{i}
             }}
         }}
@@ -249,12 +249,11 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
                     write!(
                         &mut fields_specific_impl,
                         "
-                        pub fn {field_ident}(&self) -> &Bit<{struct_data_type},{field_start_pos}> \
+                        pub fn {field_ident}(&self) -> &bit_fields::Bit<{struct_data_type},{field_start_pos}> \
                          {{
                             self.bit::<{field_start_pos}>()
                         }}
-                        pub fn {field_ident}_mut(&mut self) -> &mut \
-                         Bit<{struct_data_type},{field_start_pos}> {{
+                        pub fn {field_ident}_mut(&mut self) -> &mut bit_fields::Bit<{struct_data_type},{field_start_pos}> {{
                             self.bit_mut::<{field_start_pos}>()
                         }}
                     "
@@ -389,12 +388,12 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
 
                                     // Add bit range implementations
                                     let type_str =
-                                        format!("BitRange<{struct_data_type},{{{start}..{end}}}>");
+                                        format!("bit_fields::BitRange<{struct_data_type},{{{start}..{end}}}>");
                                     write!(&mut struct_bit_range_definitions, "{type_str},")
                                         .unwrap();
                                     write!(
                                         &mut struct_new_ranges,
-                                        "BitRange(std::marker::PhantomData),"
+                                        "bit_fields::BitRange(std::marker::PhantomData),"
                                     )
                                     .unwrap();
                                     // range_count += 1;
@@ -535,14 +534,14 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
                 base
             }}
             /// Returns a reference to the `N`th bit.
-            pub fn bit<const N: usize>(&self) -> &Bit<{struct_data_type},N>
+            pub fn bit<const N: usize>(&self) -> &bit_fields::Bit<{struct_data_type},N>
             where
                 Self: BitIndex<{struct_data_type},N>,
             {{
                 <Self as BitIndex<{struct_data_type},N>>::bit(self)
             }}
             /// Returns a mutable reference to the `N`th bit.
-            pub fn bit_mut<const N: usize>(&mut self) -> &mut Bit<{struct_data_type},N>
+            pub fn bit_mut<const N: usize>(&mut self) -> &mut bit_fields::Bit<{struct_data_type},N>
             where
                 Self: BitIndexMut<{struct_data_type},N>,
             {{

@@ -1,0 +1,2 @@
+[workspace]
+members = ["bit-fields","test-cpuid","bit-fields-macros"]

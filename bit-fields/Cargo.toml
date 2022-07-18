@@ -1,0 +1,10 @@
+[package]
+name = "bit-fields"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bit-fields-macros = { path = "../bit-fields-macros" }
+serde = { version = "1.0.139", optional = true }

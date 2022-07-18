@@ -1,0 +1,63 @@
+{
+  "leaf0x00_highest_function_parameter_an_manufacturer_id": {
+    "manufacturer_id": "AuthenticAMD",
+    "highest_calling_parameter": 13
+  },
+  "leaf0x01_process_info_and_feature_bits": {
+    "processor_version_information": {
+      "stepping_id": 1,
+      "processor_type": 0,
+      "extended_family_id": 8,
+      "extended_model_id": 6,
+      "model": 0,
+      "family_id": 15
+    },
+    "additional_information": {
+      "brand_index": 0,
+      "clflush_line_size": 8,
+      "maximum_addressable_logical_processor_ids": 12,
+      "local_apic_id": 0
+    },
+    "feature_information": {
+      "ecx": "1111_1110_1101_1000_0011_0010_0000_0011",
+      "edx": "0001_0111_1000_1011_1111_1011_1111_1111"
+    }
+  },
+  "leaf0x06_thermal_and_power_management": {
+    "features": {
+      "eax": "0000_0000_0000_0000_0000_0000_0000_0000",
+      "ecx": "0000_0000_0000_0000_0000_0000_0000_0001"
+    },
+    "number_of_interrupt_thresholds": 0
+  },
+  "leaf0x07_extended_features": {
+    "sub_leaf0": {
+      "ebx": "0010_0001_1001_1100_1001_0001_1010_1001",
+      "ecx": "0000_0000_0100_0000_0000_0000_0000_0100",
+      "edx": "0000_0000_0000_0000_0000_0000_0000_0000"
+    },
+    "sub_leaf1": "0000_0000_0000_0000_0000_0000_0000_0000"
+  },
+  "leaf0x0d_cpuid_feature_bits": "0000_0000_0000_0000_0000_0000_0000_1111",
+  "leaf0x12_cpuid_feature_bits": "0000_0000_0000_0000_0000_0000_0000_0000",
+  "leaf0x14_cpuid_feature_bits": "0000_0000_0000_0000_0000_0000_0000_0000",
+  "leaf0x19_cpuid_feature_bits": "0000_0000_0000_0000_0000_0000_0000_0000",
+  "leaf0x8000_0001_highest_function_parameter_an_manufacturer_id": {
+    "edx": "0010_1111_1101_0011_1111_1011_1111_1111",
+    "ecx": "0000_0000_0100_0000_0010_0011_1111_0011"
+  },
+  "leaf0x8000_0008_virtual_and_physical_address_sizes": {
+    "eax": {
+      "number_of_physical_address_bits": 48,
+      "number_of_linear_address_bits": 48
+    },
+    "ebx": "0000_1010_0000_0000_1101_0000_0000_0101",
+    "ecx": {
+      "log2_of_maximum_apic_id": 7,
+      "performance_timestamp_counter_size": 0,
+      "number_of_physical_cores_minus_1": 11
+    }
+  },
+  "leaf0x8000_001F_cpuid_feature_bits": "0000_0000_0000_0000_0000_0000_0000_0000",
+  "misc": {}
+}

@@ -171,7 +171,7 @@ mod tests {
             println!("\t{:?}", x);
         }
 
-        let cpuid = CpuId::from(kvm_cpuid);
+        let cpuid = RawCpuid::from(kvm_cpuid);
         println!("cpuid:");
         for x in cpuid.iter() {
             println!("\t{:?}", x);

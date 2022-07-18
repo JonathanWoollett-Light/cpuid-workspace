@@ -480,8 +480,8 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
             }}
         }}
         impl std::fmt::Binary for {struct_name} {{
-            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {{
-                fmt::Binary::fmt(&self.data, f)
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {{
+                std::fmt::Binary::fmt(&self.data, f)
             }}
         }}
         impl<T:std::fmt::Display> std::convert::TryFrom<std::collections::HashSet<T>> for {struct_name} {{
@@ -536,16 +536,16 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
             /// Returns a reference to the `N`th bit.
             pub fn bit<const N: usize>(&self) -> &bit_fields::Bit<{struct_data_type},N>
             where
-                Self: BitIndex<{struct_data_type},N>,
+                Self: bit_fields::BitIndex<{struct_data_type},N>,
             {{
-                <Self as BitIndex<{struct_data_type},N>>::bit(self)
+                <Self as bit_fields::BitIndex<{struct_data_type},N>>::bit(self)
             }}
             /// Returns a mutable reference to the `N`th bit.
             pub fn bit_mut<const N: usize>(&mut self) -> &mut bit_fields::Bit<{struct_data_type},N>
             where
-                Self: BitIndexMut<{struct_data_type},N>,
+                Self: bit_fields::BitIndexMut<{struct_data_type},N>,
             {{
-                <Self as BitIndexMut<{struct_data_type},N>>::bit_mut(self)
+                <Self as bit_fields::BitIndexMut<{struct_data_type},N>>::bit_mut(self)
             }}
             {fields_specific_impl}
             {range_specific_impl}

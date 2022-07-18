@@ -24,20 +24,7 @@ use std::marker::PhantomData;
 
 use std::ops::Range;
 
-
-#[rustfmt::skip]
-bitfield!(ExampleBitField,u32,
-    [
-        RANGE1, 0..1,
-        SSE, 2,
-        SSE1, 3,
-        RANGE2, 4..6,
-        SSE2, 9,
-        SSE3, 10,
-        RANGE3, 12..15,
-        SSE4, 18
-    ]
-);
+pub use bit_fields_macros::*;
 
 pub trait BitIndex<T, const I: usize> {
     fn bit(&self) -> &Bit<T, I>;
@@ -45,10 +32,10 @@ pub trait BitIndex<T, const I: usize> {
 pub trait BitIndexMut<T, const I: usize> {
     fn bit_mut(&mut self) -> &mut Bit<T, I>;
 }
-pub use bit_fields_macros::*;
+
 /// A type interface for a range of bits.
 #[derive(Debug, Clone, Copy)]
-pub struct BitRange<T, const R: Range<usize>>(PhantomData<T>);
+pub struct BitRange<T, const R: Range<usize>>(pub PhantomData<T>);
 
 // Display impl
 impl<const R: Range<usize>> fmt::Display for BitRange<u128, R> {
@@ -463,7 +450,7 @@ impl<const R: Range<usize>> Into<u8> for &BitRange<u8, R> {
 
 /// A type interface for a single bit.
 #[derive(Debug, Clone, Copy)]
-pub struct Bit<T, const P: usize>(PhantomData<T>);
+pub struct Bit<T, const P: usize>(pub PhantomData<T>);
 
 // Display impl
 impl<const P: usize> fmt::Display for Bit<u128, P> {
@@ -820,6 +807,7 @@ const fn mask_u8(Range { start, end }: Range<usize>) -> u8 {
 mod test {
     use std::mem::size_of;
     use super::*;
+    use crate as bit_fields;
     bitfield!(
         GeneratedBitField,
         u32,

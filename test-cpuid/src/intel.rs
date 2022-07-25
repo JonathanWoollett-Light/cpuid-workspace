@@ -123,9 +123,13 @@ static KEYWORDS: phf::Map<u8, &'static str> = phf::phf_map! {
 
 #[derive(Debug)]
 pub struct TlbCachePrefetchInfomation {
+    /// Maximum Input Value for Basic CPUID Information.
     eax: [u8; 4],
+    /// “Genu”
     ebx: [u8; 4],
+    /// “ntel”
     ecx: [u8; 4],
+    /// “ineI”
     edx: [u8; 4],
 }
 impl fmt::Display for TlbCachePrefetchInfomation {
@@ -174,38 +178,230 @@ impl From<(u32, u32, u32, u32)> for TlbCachePrefetchInfomation {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(Leaf1Eax, u32, {
+    /// Stepping ID
     stepping_id, 0..4,
+    /// Model
     model, 4..8,
+    /// Family ID
     family_id, 8..12,
+    /// Processor Type
     processor_type, 12..14,
+    /// Extended Model ID
     extended_model_id: 16..20,
+    /// Extended Family ID
     extended_family_id: 20..28,
 });
 #[rustfmt::skip]
 bitfield!(Leaf1Ebx, u32, {
+    /// Brand Index.
     brand_index, 0..8,
+    /// CLFLUSH line size (Value ∗ 8 = cache line size in bytes; used also by CLFLUSHOPT).
     clflush, 8..16,
-    // maximum_number_addressable_ids_for_logical_processors_in_this_physical_package
+    /// Maximum number of addressable IDs for logical processors in this physical package.
+    ///
+    /// The nearest power-of-2 integer that is not smaller than EBX[23:16] is the number of unique 
+    /// initial APIC IDs reserved for addressing different logical processors in a physical package. 
+    /// This field is only valid if CPUID.1.EDX.HTT[bit 28]= 1.
     max_addressable_logical_processor_ids: 16..24,
+    /// Initial APIC ID.
+    ///
+    /// The 8-bit initial APIC ID in EBX[31:24] is replaced by the 32-bit x2APIC ID, available in 
+    /// Leaf 0BH and Leaf 1FH.
     initial_apic_id: 24..32,
 });
 #[rustfmt::skip]
 bitfield!(Leaf1Ecx, u32, {
-    sse3, 0, pclmulqdq, 1, dtes64, 2, monitor, 3, ds_cpl, 4, vmx, 5, smx, 6, eist, 7, tm2, 8,
-    ssse3, 9, cnxt_id, 10, sdbg, 11, fma, 12, cmpxchg16b, 13, xtpr_update_control, 14, pdcm, 15,
+    /// Streaming SIMD Extensions 3 (SSE3). A value of 1 indicates the processor supports this
+    /// technology.
+    sse3: 0, 
+    /// PCLMULQDQ. A value of 1 indicates the processor supports the PCLMULQDQ instruction.
+    pclmulqdq: 1,
+    /// 64-bit DS Area. A value of 1 indicates the processor supports DS area using 64-bit layout.
+    dtes64: 2,
+    /// MONITOR/MWAIT. A value of 1 indicates the processor supports this feature.
+    monitor: 3,
+    /// CPL Qualified Debug Store. A value of 1 indicates the processor supports the extensions to 
+    /// the Debug Store feature to allow for branch message storage qualified by CPL.
+    ds_cpl: 4,
+    /// Virtual Machine Extensions. A value of 1 indicates that the processor supports this 
+    /// technology.
+    vmx: 5,
+    /// Safer Mode Extensions. A value of 1 indicates that the processor supports this technology. 
+    /// See Chapter 6, “Safer Mode Extensions Reference”.
+    smx: 6,
+    /// Enhanced Intel SpeedStep® technology. A value of 1 indicates that the processor supports 
+    /// this technology. 
+    eist: 7,
+    /// Thermal Monitor 2. A value of 1 indicates whether the processor supports this technology.
+    tm2: 8,
+    /// A value of 1 indicates the presence of the Supplemental Streaming SIMD Extensions 3 (SSSE3).
+    /// A value of 0 indicates the instruction extensions are not present in the processor.
+    ssse3: 9,
+    /// L1 Context ID. A value of 1 indicates the L1 data cache mode can be set to either adaptive 
+    /// mode or shared mode. A value of 0 indicates this feature is not supported. See definition of
+    /// the IA32_MISC_ENABLE MSR Bit 24 (L1 Data Cache Context Mode) for details.
+    cnxt_id: 10, 
+    /// A value of 1 indicates the processor supports IA32_DEBUG_INTERFACE MSR for silicon debug.
+    sdbg: 11,
+    /// A value of 1 indicates the processor supports FMA extensions using YMM state.
+    fma: 12, 
+    /// CMPXCHG16B Available. A value of 1 indicates that the feature is available. See the 
+    /// “CMPXCHG8B/CMPXCHG16B—Compare and Exchange Bytes” section in this chapter for a description.
+    cmpxchg16b: 13, 
+    /// xTPR Update Control. A value of 1 indicates that the processor supports changing 
+    /// IA32_MISC_ENABLE[bit 23].
+    xtpr_update_control: 14,
+    /// Perfmon and Debug Capability: A value of 1 indicates the processor supports the performance
+    /// and debug feature indication MSR IA32_PERF_CAPABILITIES.
+    pdcm: 15,
     // Reserved
-    pcid, 17, dca, 18, sse4_1, 19, sse4_2, 20, x2apic, 21, movbe, 22, popcnt, 23, tsc_deadline, 24,
-    aesni, 25, xsave, 26, osxsave, 27, avx, 28, f16c, 29, rdrand, 30,
+    /// Process-context identifiers. A value of 1 indicates that the processor supports PCIDs and 
+    /// that software may set CR4.PCIDE to 1.
+    pcid: 17,
+    /// A value of 1 indicates the processor supports the ability to prefetch data from a memory 
+    /// mapped device.
+    dca: 18, 
+    /// A value of 1 indicates that the processor supports SSE4.1.
+    sse4_1: 19,
+    /// A value of 1 indicates that the processor supports SSE4.2.
+    sse4_2: 20,
+    /// A value of 1 indicates that the processor supports x2APIC feature.
+    x2apic: 21,
+    /// A value of 1 indicates that the processor supports MOVBE instruction.
+    movbe: 22, 
+    /// A value of 1 indicates that the processor supports the POPCNT instruction.
+    popcnt: 23,
+    /// A value of 1 indicates that the processor’s local APIC timer supports one-shot operation 
+    /// using a TSC deadline value.
+    tsc_deadline: 24,
+    /// A value of 1 indicates that the processor supports the AESNI instruction extensions.
+    aesni: 25, 
+    /// A value of 1 indicates that the processor supports the XSAVE/XRSTOR processor extended 
+    /// states feature, the XSETBV/XGETBV instructions, and XCR0.
+    xsave: 26,
+    /// A value of 1 indicates that the OS has set CR4.OSXSAVE[bit 18] to enable XSETBV/XGETBV 
+    /// instructions to access XCR0 and to support processor extended state management using 
+    /// XSAVE/XRSTOR.
+    osxsave: 27,
+    /// A value of 1 indicates the processor supports the AVX instruction extensions.
+    avx: 28, 
+    /// A value of 1 indicates that processor supports 16-bit floating-point conversion instructions.
+    f16c: 29, 
+    /// A value of 1 indicates that processor supports RDRAND instruction.
+    rdrand: 30,
     // Not used
+    // TODO Should `Not used` be a flag?
 });
 #[rustfmt::skip]
 bitfield!(Leaf1Edx, u32, {
-    fpu: 0, vme: 1, de: 2, pse: 3, tsc: 4, msr: 5, pae: 6, mce: 7, cx8: 8, apic: 9,
+    /// Floating Point Unit On-Chip. The processor contains an x87 FPU.
+    fpu: 0, 
+    /// Virtual 8086 Mode Enhancements. Virtual 8086 mode enhancements, including CR4.VME for 
+    /// controlling the feature, CR4.PVI for protected mode virtual interrupts, software interrupt 
+    /// indirection, expansion of the TSS with the software indirection bitmap, and EFLAGS.VIF and 
+    /// EFLAGS.VIP flags.
+    vme: 1,
+    /// Debugging Extensions. Support for I/O breakpoints, including CR4.DE for controlling the 
+    /// feature, and optional trapping of accesses to DR4 and DR5.
+    de: 2, 
+    /// Page Size Extension. Large pages of size 4 MByte are supported, including CR4.PSE for 
+    /// controlling the feature, the defined dirty bit in PDE (Page Directory Entries), optional 
+    /// reserved bit trapping in CR3, PDEs, and PTEs.
+    pse: 3, 
+    /// Time Stamp Counter. The RDTSC instruction is supported, including CR4.TSD for controlling 
+    /// privilege.
+    tsc: 4,
+    /// Model Specific Registers RDMSR and WRMSR Instructions. The RDMSR and WRMSR instructions are 
+    /// supported. Some of the MSRs are implementation dependent.
+    msr: 5,
+    /// Physical Address Extension. Physical addresses greater than 32 bits are supported: extended 
+    /// page table entry formats, an extra level in the page translation tables is defined, 2-MByte 
+    /// pages are supported instead of 4 Mbyte pages if PAE bit is 1.
+    pae: 6, 
+    /// Machine Check Exception. Exception 18 is defined for Machine Checks, including CR4.MCE for 
+    /// controlling the feature. This feature does not define the model-specific implementations of 
+    /// machine-check error logging, reporting, and processor shutdowns. Machine Check exception 
+    /// handlers may have to depend on processor version to do model specific processing of the 
+    /// exception, or test for the presence of the Machine Check feature.
+    mce: 7,
+    /// CMPXCHG8B Instruction. The compare-and-exchange 8 bytes (64 bits) instruction is supported 
+    /// (implicitly locked and atomic).
+    cx8: 8,
+    /// APIC On-Chip. The processor contains an Advanced Programmable Interrupt Controller (APIC), 
+    /// responding to memory mapped commands in the physical address range FFFE0000H to FFFE0FFFH 
+    /// (by default - some processors permit the APIC to be relocated).
+    apic: 9,
     // Reserved
-    sep: 11, mtrr: 12, pge: 13, mca: 14, cmov: 15, pat: 16, pse3_36: 17, psn: 18, clfsh: 19,
+    /// SYSENTER and SYSEXIT Instructions. The SYSENTER and SYSEXIT and associated MSRs are 
+    /// supported.
+    sep: 11, 
+    /// Memory Type Range Registers. MTRRs are supported. The MTRRcap MSR contains feature bits that
+    /// describe what memory types are supported, how many variable MTRRs are supported, and whether
+    /// fixed MTRRs are supported.
+    mtrr: 12,
+    /// Page Global Bit. The global bit is supported in paging-structure entries that map a page, 
+    /// indicating TLB entries that are common to different processes and need not be flushed. The 
+    /// CR4.PGE bit controls this feature.
+    pge: 13,
+    /// Machine Check Architecture. A value of 1 indicates the Machine Check Architecture of 
+    /// reporting machine errors is supported. The MCG_CAP MSR contains feature bits describing how 
+    /// many banks of error reporting MSRs are supported.
+    mca: 14,
+    /// Conditional Move Instructions. The conditional move instruction CMOV is supported. In 
+    /// addition, if x87 FPU is present as indicated by the CPUID.FPU feature bit, then the FCOMI 
+    /// and FCMOV instructions are supported
+    cmov: 15,
+    /// Page Attribute Table. Page Attribute Table is supported. This feature augments the Memory 
+    /// Type Range Registers (MTRRs), allowing an operating system to specify attributes of memory 
+    /// accessed through a linear address on a 4KB granularity.
+    pat: 16,
+    /// 36-Bit Page Size Extension. 4-MByte pages addressing physical memory beyond 4 GBytes are 
+    /// supported with 32-bit paging. This feature indicates that upper bits of the physical address
+    /// of a 4-MByte page are encoded in bits 20:13 of the page-directory entry. Such physical 
+    /// addresses are limited by MAXPHYADDR and may be up to 40 bits in size.
+    pse3_36: 17,
+    /// Processor Serial Number. The processor supports the 96-bit processor identification number
+    /// feature and the feature is enabled.
+    psn: 18, 
+    /// CLFLUSH Instruction. CLFLUSH Instruction is supported.
+    clfsh: 19,
     // Reserved
-    ds: 21, acpi: 22, mmx: 23, fxsr: 24, sse: 25, sse2: 26, ss: 27, htt: 28, tm: 29,
+    /// Debug Store. The processor supports the ability to write debug information into a memory 
+    /// resident buffer. This feature is used by the branch trace store (BTS) and processor 
+    /// event-based sampling (PEBS) facilities (see Chapter 23, “Introduction to Virtual-Machine 
+    /// Extensions,” in the Intel® 64 and IA-32 Architectures Software Developer’s Manual, Volume 
+    /// 3C).
+    ds: 21,
+    /// Thermal Monitor and Software Controlled Clock Facilities. The processor implements internal 
+    /// MSRs that allow processor temperature to be monitored and processor performance to be 
+    /// modulated in predefined duty cycles under software control.
+    acpi: 22,
+    /// Intel MMX Technology. The processor supports the Intel MMX technology.
+    mmx: 23,
+    /// FXSAVE and FXRSTOR Instructions. The FXSAVE and FXRSTOR instructions are supported for fast
+    /// save and restore of the floating point context. Presence of this bit also indicates that 
+    /// CR4.OSFXSR is available for an operating system to indicate that it supports the FXSAVE and
+    /// FXRSTOR instructions.
+    fxsr: 24, 
+    /// SSE. The processor supports the SSE extensions.
+    sse: 25, 
+    /// SSE2. The processor supports the SSE2 extensions.
+    sse2: 26, 
+    /// Self Snoop. The processor supports the management of conflicting memory types by performing 
+    /// a snoop of its own cache structure for transactions issued to the bus.
+    ss: 27,
+    /// Max APIC IDs reserved field is Valid. A value of 0 for HTT indicates there is only a single 
+    /// logical processor in the package and software should assume only a single APIC ID is 
+    /// reserved. A value of 1 for HTT indicates the value in CPUID.1.EBX[23:16] (the Maximum number 
+    /// of addressable IDs for logical processors in this package) is valid for the package.
+    htt: 28, 
+    /// Thermal Monitor. The processor implements the thermal monitor automatic thermal control circuitry (TCC).
+    tm: 29,
     // Reserved
+    /// Pending Break Enable. The processor supports the use of the FERR#/PBE# pin when the 
+    /// processor is in the stop-clock state (STPCLK# is asserted) to signal the processor that an 
+    /// interrupt is pending and that the processor should return to normal operation to handle the 
+    /// interrupt.
     pbe: 31,
 });
 
@@ -214,60 +410,72 @@ bitfield!(Leaf1Edx, u32, {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(Leaf4Eax, u32, {
-    // Cache Type Field.
+    /// Cache Type Field.
+    /// - 0 = Null - No more caches.
+    /// - 1 = Data Cache.
+    /// - 2 = Instruction Cache.
+    /// - 3 = Unified Cache.
+    /// - 4-31 = Reserved.
     cache_type_field: 0..5,
-    // Cache Level (starts at 1).
+    /// Cache Level (starts at 1).
     cache_level: 5..8,
-    // Self Initializing cache level (does not need SW initialization).
+    /// Self Initializing cache level (does not need SW initialization).
     sicl: 8,
-    // Fully Associative cache.
+    /// Fully Associative cache.
     fac: 9,
     // Reserved 10..14
-    // Maximum number of addressable IDs for logical processors sharing this cache.
-    // - Add one to the return value to get the result.
-    // - The nearest power-of-2 integer that is not smaller than (1 + EAX[25:14]) is the number of 
-    //   unique initial APIC IDs reserved for addressing different logical processors sharing this 
-    //   cache.
+    /// Maximum number of addressable IDs for logical processors sharing this cache.
+    /// - Add one to the return value to get the result.
+    /// - The nearest power-of-2 integer that is not smaller than (1 + EAX[25:14]) is the number of 
+    ///   unique initial APIC IDs reserved for addressing different logical processors sharing this 
+    ///   cache.
     max_num_addressable_ids_for_logical_processors_sharing_this_cache: 14..26,
-    // Maximum number of addressable IDs for processor cores in the physical package.
-    // - Add one to the return value to get the result.
-    // - The nearest power-of-2 integer that is not smaller than (1 + EAX[31:26]) is the number of
-    //   unique Core_IDs reserved for addressing different processor cores in a physical package. 
-    //   Core ID is a subset of bits of the initial APIC ID.
-    // - The returned value is constant for valid initial values in ECX. Valid ECX values start from 0.
+    /// Maximum number of addressable IDs for processor cores in the physical package.
+    /// - Add one to the return value to get the result.
+    /// - The nearest power-of-2 integer that is not smaller than (1 + EAX[31:26]) is the number of
+    ///   unique Core_IDs reserved for addressing different processor cores in a physical package. 
+    ///   Core ID is a subset of bits of the initial APIC ID.
+    /// - The returned value is constant for valid initial values in ECX. Valid ECX values start 
+    ///   from 0.
     max_num_addressable_ids_for_processor_cores_in_physical_package: 26..32,
 });
 #[rustfmt::skip]
 bitfield!(Leaf4Ebx, u32, {
-    // L = System Coherency Line Size.
-    // - Add one to the return value to get the result.
+    /// L = System Coherency Line Size.
+    /// 
+    /// Add one to the return value to get the result.
     system_coherency_line_size: 0..12,
-    // P = Physical Line partitions.
-    // - Add one to the return value to get the result.
+    /// P = Physical Line partitions.
+    /// 
+    /// Add one to the return value to get the result.
     physical_line_partitions: 12..22,
-    // W = Ways of associativity.
-    // - Add one to the return value to get the result.
+    /// W = Ways of associativity.
+    ///
+    /// Add one to the return value to get the result.
     ways_of_associativity: 22..32
 });
 #[rustfmt::skip]
 bitfield!(Leaf4Ecx, u32, {
-    // S = Number of Sets.
-    // - Add one to the return value to get the result.
+    /// S = Number of Sets.
+    ///
+    /// Add one to the return value to get the result.
     number_of_sets: 0..32,
 });
 #[rustfmt::skip]
 bitfield!(Leaf4Edx, u32, {
-    // Write-Back Invalidate/Invalidate.
-    // - 0 = WBINVD/INVD from threads sharing this cache acts upon lower level caches for threads sharing this cache.
-    // - 1 = WBINVD/INVD is not guaranteed to act upon lower level caches of non-originating threads sharing this cache.
+    /// Write-Back Invalidate/Invalidate.
+    /// - 0 = WBINVD/INVD from threads sharing this cache acts upon lower level caches for threads 
+    ///   sharing this cache.
+    /// - 1 = WBINVD/INVD is not guaranteed to act upon lower level caches of non-originating 
+    ///   threads sharing this cache.
     write_back_invalidate: 0,
-    // Cache Inclusiveness.
-    // - 0 = Cache is not inclusive of lower cache levels.
-    // - 1 = Cache is inclusive of lower cache levels.
+    /// Cache Inclusiveness.
+    /// - 0 = Cache is not inclusive of lower cache levels.
+    /// - 1 = Cache is inclusive of lower cache levels.
     cache_inclusiveness: 1,
-    // Complex Cache Indexing.
-    // - 0 = Direct mapped cache.
-    // - 1 = A complex function is used to index the cache, potentially using all address bits.
+    /// Complex Cache Indexing.
+    /// - 0 = Direct mapped cache.
+    /// - 1 = A complex function is used to index the cache, potentially using all address bits.
     complex_cache_indexing: 2
 });
 // -------------------------------------------------------------------------------------------------
@@ -295,23 +503,45 @@ bitfield!(Leaf5Ecx, u32, {
 });
 #[rustfmt::skip]
 bitfield!(Leaf5Edx, u32, {
-    // *The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, not ACPI Cstates.
-
-    // Number of C0* sub C-states supported using MWAIT.
+    /// Number of C0* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c0_states: 0..4,
-    // Number of C1* sub C-states supported using MWAIT.
+    /// Number of C1* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c1_states: 4..8,
-    // Number of C2* sub C-states supported using MWAIT.
+    /// Number of C2* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c2_states: 8..12,
-    // Number of C3* sub C-states supported using MWAIT.
+    /// Number of C3* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c3_states: 12..16,
-    // Number of C4* sub C-states supported using MWAIT.
+    /// Number of C4* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c4_states: 16..20,
-    // Number of C5* sub C-states supported using MWAIT.
+    /// Number of C5* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c5_states: 20..24,
-    // Number of C6* sub C-states supported using MWAIT.
+    /// Number of C6* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c6_states: 24..28,
-    // Number of C7* sub C-states supported using MWAIT.
+    /// Number of C7* sub C-states supported using MWAIT.
+    ///
+    /// The definition of C0 through C7 states for MWAIT extension are processor-specific C-states, 
+    /// not ACPI Cstates.
     c7_states: 28..32
 });
 // -------------------------------------------------------------------------------------------------
@@ -319,74 +549,95 @@ bitfield!(Leaf5Edx, u32, {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(Leaf6Eax, u32, {
-    // Digital temperature sensor is supported if set.
+    /// Digital temperature sensor is supported if set.
     digital_temperature_sensor: 0,
-    // Intel Turbo Boost Technology available (see description of IA32_MISC_ENABLE[38]).
+    /// Intel Turbo Boost Technology available (see description of IA32_MISC_ENABLE[38]).
     intel_turbo_boost_technology: 1,
+    /// ARAT. APIC-Timer-always-running feature is supported if set.
     arat: 2,
     // Reserved
+    /// PLN. Power limit notification controls are supported if set.
     pln: 4,
+    /// ECMD. Clock modulation duty cycle extension is supported if set.
     ecmd: 5,
+    /// PTM. Package thermal management is supported if set.
     ptm: 6,
+    /// HWP. HWP base registers (IA32_PM_ENABLE[bit 0], IA32_HWP_CAPABILITIES, IA32_HWP_REQUEST, 
+    /// IA32_HWP_STATUS) are supported if set.
     hwp: 7,
+    /// HWP_Notification. IA32_HWP_INTERRUPT MSR is supported if set.
     hwp_notification: 8,
+    /// HWP_Activity_Window. IA32_HWP_REQUEST[bits 41:32] is supported if set.
     hwp_activity_window: 9,
+    /// HWP_Energy_Performance_Preference. IA32_HWP_REQUEST[bits 31:24] is supported if set.
     hwp_energy_performance: 10,
+    /// HWP_Package_Level_Request. IA32_HWP_REQUEST_PKG MSR is supported if set.
     hwp_package_level_request: 11,
     // Reserved
+    /// HDC. HDC base registers IA32_PKG_HDC_CTL, IA32_PM_CTL1, IA32_THREAD_STALL MSRs are supported
+    /// if set.
     hdc: 13,
+    /// Intel® Turbo Boost Max Technology 3.0 available.
     intel_turbo_boost_max_technology_3: 14,
+    /// HWP Capabilities. Highest Performance change is supported if set.
     hwp_capabilities: 15,
+    /// HWP PECI override is supported if set.
     hwp_peci_override: 16,
+    /// Flexible HWP is supported if set.
     flexible_hwp: 17,
     // Fast access mode for the IA32_HWP_REQUEST MSR is supported if set.
     fast_access_mode_for_i32_hwp_request_msr: 18,
+    /// HW_FEEDBACK. IA32_HW_FEEDBACK_PTR MSR, IA32_HW_FEEDBACK_CONFIG MSR, 
+    /// IA32_PACKAGE_THERM_STATUS MSR bit 26, and IA32_PACKAGE_THERM_INTERRUPT MSR bit 25 are 
+    /// supported if set.
     hw_feedback: 19,
     // Ignoring Idle Logical Processor HWP request is supported if set.
     iilp_hwp_r; 20,
     // Reserved 21..=22
+    /// Intel® Thread Director supported if set. IA32_HW_FEEDBACK_CHAR and 
+    /// IA32_HW_FEEDBACK_THREAD_CONFIG MSRs are supported if set.
     intel_thread_director: 23,
     // Reserved 24..=31
     
 });
 #[rustfmt::skip]
 bitfield!(Leaf6Ebx, u32, {
-    // Number of Interrupt Thresholds in Digital Thermal Sensor.
+    /// Number of Interrupt Thresholds in Digital Thermal Sensor.
     number_of_interrupt_thresholds_in_digital_thermal_sensor: 0..4,
     // Reserved 4..=31
 });
 #[rustfmt::skip]
 bitfield!(Leaf6Ecx, u32, {
-    // Hardware Coordination Feedback Capability (Presence of IA32_MPERF and IA32_APERF). The 
-    // capability to provide a measure of delivered processor performance (since last reset of the 
-    // counters), as a percentage of the expected processor performance when running at the TSC
-    // frequency.
+    /// Hardware Coordination Feedback Capability (Presence of IA32_MPERF and IA32_APERF). The 
+    /// capability to provide a measure of delivered processor performance (since last reset of the 
+    /// counters), as a percentage of the expected processor performance when running at the TSC
+    /// frequency.
     hardware_coordination_feedback_capability: 0,
     // Reserved 1..=2
-    // The processor supports performance-energy bias preference if CPUID.06H:ECX.SETBH[bit 3] is 
-    // set and it also implies the presence of a new architectural MSR called IA32_ENERGY_PERF_BIAS
-    // (1B0H).
+    /// The processor supports performance-energy bias preference if CPUID.06H:ECX.SETBH[bit 3] is 
+    /// set and it also implies the presence of a new architectural MSR called IA32_ENERGY_PERF_BIAS
+    /// (1B0H).
     performance_energy_bias: 3,
-    // Reserved 04..=07
-    // Number of Intel® Thread Director classes supported by the processor. Information for that
-    // many classes is written into the Intel Thread Director Table by the hardware.
+    /// Reserved 04..=07
+    /// Number of Intel® Thread Director classes supported by the processor. Information for that
+    /// many classes is written into the Intel Thread Director Table by the hardware.
     intel_thread_director_classes: 8..16,
     // Reserved 16..=31
 });
 #[rustfmt::skip]
 bitfield!(Leaf6Edx, u32, {
-    // Bitmap of supported hardware feedback interface capabilities.
-    // - 0 = When set to 1, indicates support for performance capability reporting.
-    // - 1 = When set to 1, indicates support for energy efficiency capability reporting.
-    // - 2-7 = Reserved
+    /// Bitmap of supported hardware feedback interface capabilities.
+    /// - 0 = When set to 1, indicates support for performance capability reporting.
+    /// - 1 = When set to 1, indicates support for energy efficiency capability reporting.
+    /// - 2-7 = Reserved
     bitmap_hardware_feedback_interface_capabilities: 0..8,
-    // Enumerates the size of the hardware feedback interface structure in number of 4 KB pages; add
-    // one to the return value to get the result.
+    /// Enumerates the size of the hardware feedback interface structure in number of 4 KB pages; 
+    /// add one to the return value to get the result.
     enum_hardware_feedback_interface_4k: 8..12,
-    // Index (starting at 0) of this logical processor's row in the hardware feedback interface
-    // structure. Note that on some parts the index may be same for multiple logical processors. On
-    // some parts the indices may not be contiguous, i.e., there may be unused rows in the hardware
-    // feedback interface structure.
+    /// Index (starting at 0) of this logical processor's row in the hardware feedback interface
+    /// structure. Note that on some parts the index may be same for multiple logical processors. On
+    /// some parts the indices may not be contiguous, i.e., there may be unused rows in the hardware
+    /// feedback interface structure.
     index: 16..32
 });
 // -------------------------------------------------------------------------------------------------
@@ -394,131 +645,207 @@ bitfield!(Leaf6Edx, u32, {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf0Eax, u32, {
-    // Reports the maximum input value for supported leaf 7 sub-leaves.
+    /// Reports the maximum input value for supported leaf 7 sub-leaves.
     max_input_value_subleaf: 0..32
 });
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf0Ebx, u32, {
+    /// FSGSBASE. Supports RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE if 1.
     fsgsbase: 0,
+    /// IA32_TSC_ADJUST MSR is supported if 1.
     ia32_tsc_adjust_msr: 1,
+    /// SGX. Supports Intel® Software Guard Extensions (Intel® SGX Extensions) if 1.
     sgx: 2,
+    /// BMI1.
     bmi1: 3,
+    /// HLE.
     hle: 4,
+    /// AVX2.
     avx2: 5,
+    /// FDP_EXCPTN_ONLY. x87 FPU Data Pointer updated only on x87 exceptions if 1.
     fdp_excptn_only: 6,
+    /// SMEP. Supports Supervisor-Mode Execution Prevention if 1.
     smep: 7,
+    /// BMI2.
     bmi2: 8,
+    /// Supports Enhanced REP MOVSB/STOSB if 1.
     suports_enhanced_rep_movsb_stosb: 9,
+    /// INVPCID. If 1, supports INVPCID instruction for system software that manages process-context 
+    /// identifiers.
     invpcid: 10,
+    /// RTM.
     rtm: 11,
+    /// RDT-M. Supports Intel® Resource Director Technology (Intel® RDT) Monitoring capability if 1.
     rdt_m: 12,
+    /// Deprecates FPU CS and FPU DS values if 1.
     deprecates_fpu_cs_and_fpu_ds: 13,
+    /// MPX. Supports Intel® Memory Protection Extensions if 1.
     mpx: 14,
+    /// RDT-A. Supports Intel® Resource Director Technology (Intel® RDT) Allocation capability if 1.
     rdt_t: 15,
+    /// AVX512F.
     avx512f: 16,
+    /// AVX512DQ.
     avx512dq: 17,
+    /// RDSEED.
     rdseed: 18,
+    /// ADX.
     adx: 19,
+    /// SMAP. Supports Supervisor-Mode Access Prevention (and the CLAC/STAC instructions) if 1.
     smap: 20,
+    /// AVX512_IFMA.
     avx512_ifma: 21,
     // Reserved
+    /// CLFLUSHOPT.
     clfushopt: 23,
+    /// CLWB.
     clwb: 24,
+    /// Intel Processor Trace.
     intel_processor_trace: 25,
+    /// AVX512PF. (Intel® Xeon Phi™ only.)
     avx512pf: 26,
+    /// AVX512ER. (Intel® Xeon Phi™ only.)
     avx512er: 27,
+    /// AVX512CD.
     avx512cd: 28,
+    /// SHA. supports Intel® Secure Hash Algorithm Extensions (Intel® SHA Extensions) if 1.
     sha: 29,
+    /// AVX512BW.
     avx512bw: 30,
+    /// AVX512VL.
     avx512vl: 31
 });
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf0Ecx, u32, {
-    // Docs note 'PREFETCHWT1. (Intel® Xeon Phi™ only.)'
-    // prefetchwt1: 0,
+    /// PREFETCHWT1. (Intel® Xeon Phi™ only.)
+    prefetchwt1: 0,
+    /// AVX512_VBMI.
     avx512_vbmi: 1,
+    /// UMIP. Supports user-mode instruction prevention if 1.
     umip: 2,
+    /// PKU. Supports protection keys for user-mode pages if 1.
     pku: 3,
+    /// OSPKE. If 1, OS has set CR4.PKE to enable protection keys (and the RDPKRU/WRPKRU instructions).
     ospke: 4,
+    /// WAITPKG.
     waitpkg: 5,
+    /// AVX512_VBMI2.
     avx512_vbmi2: 6,
+    /// CET_SS. Supports CET shadow stack features if 1. Processors that set this bit define bits 
+    /// 1:0 of the IA32_U_CET and IA32_S_CET MSRs. Enumerates support for the following MSRs: 
+    /// IA32_INTERRUPT_SPP_TABLE_ADDR, IA32_PL3_SSP, IA32_PL2_SSP, IA32_PL1_SSP, and IA32_PL0_SSP.
     cet_ss: 7,
+    /// GFNI.
     gfni: 8,
+    /// VAES.
     vaes: 9,
+    /// VPCLMULQDQ.
     vpclmulqdq: 10,
+    /// AVX512_VNNI.
     avx512_vnni: 11,
+    /// AVX512_BITALG.
     avx512_bitalg: 12,
+    /// TME_EN. If 1, the following MSRs are supported: IA32_TME_CAPABILITY, IA32_TME_ACTIVATE, 
+    /// IA32_TME_EXCLUDE_MASK, and IA32_TME_EXCLUDE_BASE.
     tme_en; 13,
+    /// AVX512_VPOPCNTDQ.
     avx512_vpopcntdq: 14,
     // Reserved
+    /// LA57. Supports 57-bit linear addresses and five-level paging if 1.
     la57: 16,
+    /// The value of MAWAU used by the BNDLDX and BNDSTX instructions in 64-bit mode.
     value_of_mawau: 17..22,
+    /// RDPID and IA32_TSC_AUX are available if 1.
     rdpid_and_ia32_tsc_aux: 22,
+    /// KL. Supports Key Locker if 1.
     kl: 23,
     // Reserved
+    /// CLDEMOTE. Supports cache line demote if 1.
     cldemote: 25,
     // Reserved
+    /// MOVDIRI. Supports MOVDIRI if 1.
     movdiri: 27,
+    /// MOVDIR64B. Supports MOVDIR64B if 1.
     movdiri64b: 28,
     // Reserved
+    /// SGX_LC. Supports SGX Launch Configuration if 1.
     sgx_lc: 30,
+    /// PKS. Supports protection keys for supervisor-mode pages if 1.
     pks: 31
 });
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf0Edx, u32, {
     // Reserved
-    // Docs note '(Intel® Xeon Phi™ only.)'
-    // avx512_4vnniw: 2
-    // Docs note '(Intel® Xeon Phi™ only.)'
-    // avx512_4fmaps: 3
+    /// AVX512_4VNNIW. (Intel® Xeon Phi™ only.)
+    avx512_4vnniw: 2
+    /// AVX512_4FMAPS. (Intel® Xeon Phi™ only.)
+    avx512_4fmaps: 3
+    /// Fast Short REP MOV.
     fast_short_rep_mov: 4,
     // Reserved 5..=7
+    /// AVX512_VP2INTERSECT.
     avx512_vp2intersect: 8,
     // Reserved
+    /// MD_CLEAR supported.
     md_clear: 10,
     // Reserved
+    /// SERIALIZE.
     serialize:  11..14,
+    /// Hybrid. If 1, the processor is identified as a hybrid part.
     hydrid: 15,
     // Reserved 16..=17
+    /// PCONFIG. Supports PCONFIG if 1.
     pconfig: 18,
     // Reserved
+    /// CET_IBT. Supports CET indirect branch tracking features if 1. Processors that set this bit 
+    /// define bits 5:2 and bits 63:10 of the IA32_U_CET and IA32_S_CET MSRs.
     cet_ibt: 19,
     // Reserved 21..=25
-    // Enumerates support for indirect branch restricted speculation (IBRS) and the indirect branch
-    // predictor barrier (IBPB). Processors that set this bit support the IA32_SPEC_CTRL MSR and the
-    // IA32_PRED_CMD MSR. They allow software to set IA32_SPEC_CTRL[0] (IBRS) and IA32_PRED_CMD[0]
-    // (IBPB).
+    /// Enumerates support for indirect branch restricted speculation (IBRS) and the indirect branch
+    /// predictorn barrier (IBPB). Processors that set this bit support the IA32_SPEC_CTRL MSR and 
+    /// the A32_PRED_CMD MSR. They allow software to set IA32_SPEC_CTRL[0] (IBRS) and 
+    /// IA32_PRED_CMD[0] (IBPB).
     ibrs_ibpb_enum: 26,
-    // Enumerates support for single thread indirect branch predictors (STIBP). Processors that set
-    // this bit support the IA32_SPEC_CTRL MSR. They allow software to set IA32_SPEC_CTRL[1] 
-    // (STIBP).
+    /// Enumerates support for single thread indirect branch predictors (STIBP). Processors that set
+    /// this bit support the IA32_SPEC_CTRL MSR. They allow software to set IA32_SPEC_CTRL[1] 
+    /// (STIBP).
     stibp_enum: 27,
-    // Enumerates support for L1D_FLUSH. Processors that set this bit support the IA32_FLUSH_CMD 
-    // MSR. They allow software to set IA32_FLUSH_CMD[0] (L1D_FLUSH).
+    /// Enumerates support for L1D_FLUSH. Processors that set this bit support the IA32_FLUSH_CMD 
+    /// MSR. They allow software to set IA32_FLUSH_CMD[0] (L1D_FLUSH).
     l1d_flush_enum: 28,
-    // Enumerates support for the IA32_ARCH_CAPABILITIES MSR.
+    /// Enumerates support for the IA32_ARCH_CAPABILITIES MSR.
     ia32_arch_capabilities_msr_enum: 29,
-    // Enumerates support for the IA32_CORE_CAPABILITIES MSR.
+    /// Enumerates support for the IA32_CORE_CAPABILITIES MSR.
     ia32_core_capabilities_msr_enum: 30,
-    // Enumerates support for Speculative Store Bypass Disable (SSBD). Processors that set this bit
-    // support the IA32_SPEC_CTRL MSR. They allow software to set IA32_SPEC_CTRL[2] (SSBD).
+    /// Enumerates support for Speculative Store Bypass Disable (SSBD). Processors that set this bit
+    /// support the IA32_SPEC_CTRL MSR. They allow software to set IA32_SPEC_CTRL[2] (SSBD).
     ssbd_enum: 31
 });
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf1Eax, u32, {
     // Reserved 0..=3
+    /// AVX-VNNI. AVX (VEX-encoded) versions of the Vector Neural Network Instructions.
     avx_vnni: 4,
+    /// AVX512_BF16. Vector Neural Network Instructions supporting BFLOAT16 inputs and conversion 
+    /// instructions from IEEE single precision.
     avx512_bf16: 5,
     // Reserved 6..=9
+    /// If 1, supports fast zero-length REP MOVSB.
     fast_zero_length_rep_movsh: 10,
+    /// If 1, supports fast short REP STOSB.
     fast_short_rep_stosb: 11,
+    /// If 1, supports fast short REP CMPSB, REP SCASB.
     fast_short_rep_cmpsb_rep_scasb: 12,
     // Reserved 13..=21
+    /// HRESET. If 1, supports history reset via the HRESET instruction and the IA32_HRESET_ENABLE 
+    /// MSR. When set, indicates that the Processor History Reset Leaf (EAX = 20H) is valid.
     hreset: 22,
     // Reserved 23..=31
 });
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf1Ebx, u32, {
+    /// Enumerates the presence of the IA32_PPIN and IA32_PPIN_CTL MSRs. If 1, these MSRs are
+    /// supported.
     ia32_ppin_and_ia32_ppin_ctl_msrs_enum: 0
     // Reserved 1..=31
 });
@@ -535,7 +862,7 @@ bitfield!(Leaf7Subleaf1Edx, u32, {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(Leaf9Eax, u32, {
-    // Value of bits [31:0] of IA32_PLATFORM_DCA_CAP MSR (address 1F8H).
+    /// Value of bits [31:0] of IA32_PLATFORM_DCA_CAP MSR (address 1F8H).
     ia32_paltform_dca_cap_msr: 0..32
 });
 #[rustfmt::skip]
@@ -555,51 +882,52 @@ bitfield!(Leaf9Edx, u32, {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(LeafAEax, u32, {
-    // Version ID of architectural performance monitoring.
+    /// Version ID of architectural performance monitoring.
     version_id_of_architectural_performance_monitoring: 0..8,
-    // Number of general-purpose performance monitoring counter per logical processor.
+    /// Number of general-purpose performance monitoring counter per logical processor.
     num_perf_monitor_counter_per_logical_processor: 8..16,
-    // Bit width of general-purpose, performance monitoring counter.
+    /// Bit width of general-purpose, performance monitoring counter.
     bot_width_perf_monitor_counter: 16..24,
-    // Length of EBX bit vector to enumerate architectural performance monitoring events. 
-    // Architectural event x is supported if EBX[x]=0 && EAX[31:24]>x.
+    /// Length of EBX bit vector to enumerate architectural performance monitoring events. 
+    /// Architectural event x is supported if EBX[x]=0 && EAX[31:24]>x.
     len_ebx_bit_vec: 24..32
 });
 #[rustfmt::skip]
 bitfield!(LeafAEbx, u32, {
-    // Core cycle event not available if 1 or if EAX[31:24]<1.
+    /// Core cycle event not available if 1 or if EAX[31:24]<1.
     core_cycle_event: 0,
-    // Instruction retired event not available if 1 or if EAX[31:24]<2.
+    /// Instruction retired event not available if 1 or if EAX[31:24]<2.
     instruction_retired_event: 1,
-    // Reference cycles event not available if 1 or if EAX[31:24]<3.
+    /// Reference cycles event not available if 1 or if EAX[31:24]<3.
     reference_cycles_event: 2,
-    // Last-level cache reference event not available if 1 or if EAX[31:24]<4.
+    /// Last-level cache reference event not available if 1 or if EAX[31:24]<4.
     last_level_cache_reference_event: 3,
-    // Last-level cache misses event not available if 1 or if EAX[31:24]<5.
+    /// Last-level cache misses event not available if 1 or if EAX[31:24]<5.
     last_level_cache_misses_event: 4,
-    // Branch instruction retired event not available if 1 or if EAX[31:24]<6.
+    /// Branch instruction retired event not available if 1 or if EAX[31:24]<6.
     branch_instruction_retired_event: 5,
-    // Branch mispredict retired event not available if 1 or if EAX[31:24]<7.
+    /// Branch mispredict retired event not available if 1 or if EAX[31:24]<7.
     branch_mispredict_retired_event: 6,
-    // Top-down slots event not available if 1 or if EAX[31:24]<8.
+    /// Top-down slots event not available if 1 or if EAX[31:24]<8.
     top_down_slots_event: 7,
     // Reserved 8..=31
 });
 #[rustfmt::skip]
 bitfield!(LeafAEcx, u32, {
-    // Supported fixed counters bit mask. Fixed-function performance counter 'i' is supported if bit
-    // ‘i’ is 1 (first counter index starts at zero). It is recommended to use the following logic 
-    // to determine if a Fixed Counter is supported: 
-    // FxCtr[i]_is_supported := ECX[i] || (EDX[4:0] > i);
+    /// Supported fixed counters bit mask. Fixed-function performance counter 'i' is supported if 
+    /// bit ‘i’ is 1 (first counter index starts at zero). It is recommended to use the following 
+    /// logic to determine if a Fixed Counter is supported: 
+    /// FxCtr[i]_is_supported := ECX[i] || (EDX[4:0] > i);
     supported_fixed_counters_bit_mask: 0..32
 });
 #[rustfmt::skip]
 bitfield!(LeafAEdx, u32, {
-    // Number of contiguous fixed-function performance counters starting from 0 (if Version ID >1).
+    /// Number of contiguous fixed-function performance counters starting from 0 (if Version ID >1).
     contigous_fixed_function_performance_counter: 0..5,
-    // Bit width of fixed-function performance counters (if Version ID > 1).
+    /// Bit width of fixed-function performance counters (if Version ID > 1).
     bit_width_of_fixed_function_performnace_counter: 5..13,
     // Reserved 13..=14
+    /// AnyThread deprecation.
     anythread_deprecation: 15
     // Reserved 16..=31
 });
@@ -608,39 +936,44 @@ bitfield!(LeafAEdx, u32, {
 // -------------------------------------------------------------------------------------------------
 #[rustfmt::skip]
 bitfield!(LeafBEax, u32, {
-    // Number of bits to shift right on x2APIC ID to get a unique topology ID of the next level 
-    // type*. All logical processors with the same next level ID share current level.
+    /// Number of bits to shift right on x2APIC ID to get a unique topology ID of the next level 
+    /// type*. All logical processors with the same next level ID share current level.
+    ///
+    /// *Software should use this field (EAX[4:0]) to enumerate processor topology of the system.
     bit_shifts_right_2x_apic_id_unique_topology_id: 0..5
 });
 #[rustfmt::skip]
 bitfield!(LeafBEbx, u32, {
-    // Number of logical processors at this level type. The number reflects configuration as shipped
-    // by Intel.
-    //
-    // Software must not use EBX[15:0] to enumerate processor topology of the system. This value in 
-    // this field (EBX[15:0]) is only intended for display/diagnostic purposes. The actual number of 
-    // logical processors available to BIOS/OS/Applications may be different from the value of 
-    // EBX[15:0], depending on software and platform hardware configurations.
+    /// Number of logical processors at this level type. The number reflects configuration as shipped
+    /// by Intel**.
+    ///
+    /// **Software must not use EBX[15:0] to enumerate processor topology of the system. This value 
+    /// in this field (EBX[15:0]) is only intended for display/diagnostic purposes. The actual 
+    /// number of  logical processors available to BIOS/OS/Applications may be different from the 
+    /// value of  EBX[15:0], depending on software and platform hardware configurations.
     logical_processors: 0..16
 });
 #[rustfmt::skip]
 bitfield!(LeafBEcx, u32, {
+    /// Level number. Same value in ECX input.
     level_number: 0..8,
-    // If an input value n in ECX returns the invalid level-type of 0 in ECX[15:8], other input 
-    // values with ECX>n also return 0 in ECX[15:8].
-    //
-    // The value of the “level type” field is not related to level numbers in any way, higher 
-    // “level type” values do not mean higher levels. Level type field has the following encoding:
-    // - 0: Invalid.
-    // - 1: SMT.
-    // - 2: Core.
-    // - 3-255: Reserved.
+    /// Level type***
+    /// 
+    /// If an input value n in ECX returns the invalid level-type of 0 in ECX[15:8], other input 
+    /// values with ECX>n also return 0 in ECX[15:8].
+    ///
+    /// ***The value of the “level type” field is not related to level numbers in any way, higher 
+    /// “level type” values do not mean higher levels. Level type field has the following encoding:
+    /// - 0: Invalid.
+    /// - 1: SMT.
+    /// - 2: Core.
+    /// - 3-255: Reserved.
     level_type: 8..16
     // Reserved 16..=31
 });
 #[rustfmt::skip]
 bitfield!(LeafBEdx, u32, {
-    // x2APIC ID the current logical processor.
+    /// x2APIC ID the current logical processor.
     x2_apic_id_current_logical_processor: 0..32
 });
 // -------------------------------------------------------------------------------------------------
@@ -651,52 +984,99 @@ bitfield!(LeafBEdx, u32, {
 bitfield!(LeafDSubleaf0Eax, u32, {
     // Bits 31 - 00: Reports the supported bits of the lower 32 bits of XCR0. XCR0[n] can be set to 
     // 1 only if EAX[n] is 1.
+    /// x87 state.
     x86_state: 0,
+    /// SSE state.
     sse_state: 1,
+    /// AVX state.
     avx_state: 2,
+    /// MPX state.
     mpx_state: 3..5,
+    /// AVX-512 state.
     avx512_state: 5..8,
+    /// Used for IA32_XSS.
     used_for_ia32_xss: 8,
+    /// PKRU state.
     pkru_state: 9,
     // Reserved 10..=12
+    /// Used for IA32_XSS.
     used_for_ia32_xss_1: 13,
     // Reserved 14..=15
+    /// Used for IA32_XSS.
     used_for_ia32_xss_2: 16,
     // Reserved 17..=31
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf0Ebx, u32, {
-    // Maximum size in bytes required by enabled features.
+    /// Maximum size (bytes, from the beginning of the XSAVE/XRSTOR save area) required by enabled 
+    /// features in XCR0. May be different than ECX if some features at the end of the XSAVE save
+    /// area are not enabled.
     maximum_size: 0..32
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf0Ecx, u32, {
-    // Maximum size in bytes required by all supported features 
-    // (`LeafDSubleaf0Ecx::maximum_size() >= LeafDSubleaf0Ebx::maximum_size()`).
+    /// Maximum size (bytes, from the beginning of the XSAVE/XRSTOR save area) of the XSAVE/XRSTOR 
+    /// save area required by all supported features in the processor, i.e., all the valid bit 
+    /// fields in XCR0.
+    ///
+    // `LeafDSubleaf0Ecx::maximum_size() >= LeafDSubleaf0Ebx::maximum_size()`
     maximum_size: 0..32
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf0Edx, u32, {
-    supported_bits_of_upper_32_bits_of_xcro: 0..32
+    // TODO Double check this
+    // Reports the supported bits of the upper 32 bits of XCR0. XCR0[n+32] can be set to 1 only if 
+    // EDX[n] is 1.
+    // Reserved
 });
 // Leaf 1
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf1Eax, u32, {
+    /// XSAVEOPT is available.
     xsaveopt_available: 0,
+    /// Supports XSAVEC and the compacted form of XRSTOR if set.
     xsavec_compacted_xrstor: 1,
+    /// Supports XGETBV with ECX = 1 if set.
     xgetbv: 2,
+    /// Supports XSAVES/XRSTORS and IA32_XSS if set.
     xsaves_xrstors_ia32_xss: 3,
     // Reserved 0..32
 
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf1Ebx, u32, {
+    /// The size in bytes of the XSAVE area containing all states enabled by XCRO | IA32_XSS.
+    xsave_size: 0..32
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf1Ecx, u32, {
+    // Reports the supported bits of the lower 32 bits of the IA32_XSS MSR. IA32_XSS[n] can be set 
+    // to 1 only if ECX[n] is 1.
+    /// Used for XCR0.
+    xcr0_1: 0..8,
+    /// PT state.
+    pt_state: 8,
+    /// Used for XCR0.
+    xcr0_2: 9,
+    // Reserved
+    /// CET user state.
+    cet_user_state: 11,
+    /// CET supervisor state.
+    cet_supervisor_state: 12,
+    /// HDC state.
+    hdc_state: 13,
+    // Reserved
+    /// LBR state (architectural).
+    lbr_state: 15
+    /// HWP state.
+    hwp_state: 16,
+    // Reserved 17..=31
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf1Edx, u32, {
+    // Reports the supported bits of the upper 32 bits of the IA32_XSS MSR. IA32_XSS[n+32] can be 
+    // set to 1 only if EDX[n] is 1.
+    // Reserved
 });
 // -------------------------------------------------------------------------------------------------
 // struct definition

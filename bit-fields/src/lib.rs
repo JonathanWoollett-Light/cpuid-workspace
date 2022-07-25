@@ -1060,10 +1060,7 @@ mod test {
             "bitfield: {:032b} | {:?} | {}",
             bitfield, bitfield, bitfield
         );
-        println!(
-            "size_of::<GeneratedBitField>(): {}",
-            size_of::<GeneratedBitField>(),
-        );
+        assert_eq!(size_of::<u32>(), size_of::<GeneratedBitField>(),);
         println!("bitfield ptr: {:?}", &bitfield as *const GeneratedBitField);
 
         assert_eq!(mask_u16(0, 16), 0b1111_1111_1111_1111);
@@ -1088,22 +1085,22 @@ mod test {
         assert_eq!(mask_u8(0, 4), 0b0000_1111);
         assert_eq!(mask_u8(4, 8), 0b1111_0000);
 
-        assert_eq!(bitfield.RANGE1_mut().checked_add_assign(1), Ok(()));
+        assert_eq!(bitfield.RANGE1.checked_add_assign(1), Ok(()));
         assert_eq!(
-            bitfield.RANGE1_mut().checked_add_assign(1),
+            bitfield.RANGE1.checked_add_assign(1),
             Err(CheckedAddAssignErr::Overflow)
         );
         assert_eq!(
-            bitfield.RANGE2_mut().checked_add_assign(1),
+            bitfield.RANGE2.checked_add_assign(1),
             Err(CheckedAddAssignErr::Overflow)
         );
-        assert_eq!(bitfield.RANGE3_mut().checked_add_assign(2), Ok(()));
+        assert_eq!(bitfield.RANGE3.checked_add_assign(2), Ok(()));
         assert_eq!(
-            bitfield.RANGE3_mut().checked_add_assign(1),
+            bitfield.RANGE3.checked_add_assign(1),
             Err(CheckedAddAssignErr::Overflow)
         );
         assert_eq!(
-            bitfield.RANGE3_mut().checked_add_assign(8),
+            bitfield.RANGE3.checked_add_assign(8),
             Err(CheckedAddAssignErr::OutOfRange)
         );
 
@@ -1112,16 +1109,16 @@ mod test {
             bitfield, bitfield, bitfield
         );
 
-        assert_eq!(bitfield.RANGE1_mut().checked_sub_assign(1), Ok(()));
+        assert_eq!(bitfield.RANGE1.checked_sub_assign(1), Ok(()));
         assert_eq!(
-            bitfield.RANGE1_mut().checked_sub_assign(1),
+            bitfield.RANGE1.checked_sub_assign(1),
             Err(CheckedSubAssignErr::Underflow)
         );
         assert_eq!(
-            bitfield.RANGE1_mut().checked_sub_assign(2),
+            bitfield.RANGE1.checked_sub_assign(2),
             Err(CheckedSubAssignErr::OutOfRange)
         );
-        assert_eq!(bitfield.RANGE2_mut().checked_sub_assign(1), Ok(()));
+        assert_eq!(bitfield.RANGE2.checked_sub_assign(1), Ok(()));
 
         println!(
             "bitfield: {:032b} | {:?} | {}",

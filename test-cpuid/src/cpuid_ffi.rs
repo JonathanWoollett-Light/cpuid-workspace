@@ -3,7 +3,7 @@ use std::ops::Index;
 
 // Stuff to use for interaction with ffi.
 
-fn vec_into_raw_parts<T>(v: Vec<T>) -> (*mut T, usize,usize) {
+fn vec_into_raw_parts<T>(v: Vec<T>) -> (*mut T, usize, usize) {
     let mut me = std::mem::ManuallyDrop::new(v);
     (me.as_mut_ptr(), me.len(), me.capacity())
 }
@@ -14,7 +14,7 @@ fn vec_into_raw_parts<T>(v: Vec<T>) -> (*mut T, usize,usize) {
 ///
 /// [`RawCpuid`] has an identical memory layout to
 /// [`kvm_cpuid`](https://elixir.bootlin.com/linux/v5.10.129/source/arch/x86/include/uapi/asm/kvm.h#L226)
-/// thus we can [`std::mem::transmute`] between them.
+/// .
 ///
 /// This allows [`RawCpuid`] to function as a simpler replacement for [`kvm_bindings::CpuId`]. In
 /// the future it may replace [`kvm_bindings::CpuId`] fully.
@@ -133,23 +133,18 @@ impl From<kvm_bindings::CpuId> for RawCpuid {
         }
     }
 }
-// We can't implement a foreign trait on a foreign type, thus we can't implement `From<RawCpuid> for
-// kvm_bindings::CpuId` thus we must implement `Into`.
-#[allow(clippy::from_over_into)]
-impl Into<kvm_bindings::CpuId> for RawCpuid {
-    fn into(self) -> kvm_bindings::CpuId {
-        let cpuid_slice = unsafe { std::slice::from_raw_parts(self.entries, self.nent as usize) };
+impl From<RawCpuid> for kvm_bindings::CpuId {
+    fn from(this: RawCpuid) -> Self {
+        let cpuid_slice = unsafe { std::slice::from_raw_parts(this.entries, this.nent as usize) };
         // println!("cpuid_slice: {:?}",cpuid_slice);
         #[allow(clippy::transmute_ptr_to_ptr)]
         let kvm_bindings_slice = unsafe { std::mem::transmute(cpuid_slice) };
         kvm_bindings::CpuId::from_entries(kvm_bindings_slice).unwrap()
     }
 }
-// // We can't implement a foreign trait on a foreign type.
-#[allow(clippy::from_over_into)]
-impl Into<(u32, u32, u32, u32)> for RawCpuidEntry {
-    fn into(self) -> (u32, u32, u32, u32) {
-        (self.eax, self.ebx, self.ecx, self.edx)
+impl From<RawCpuidEntry> for (u32, u32, u32, u32) {
+    fn from(this: RawCpuidEntry) -> Self {
+        (this.eax, this.ebx, this.ecx, this.edx)
     }
 }
 

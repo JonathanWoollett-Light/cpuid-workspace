@@ -3,7 +3,8 @@
     non_upper_case_globals,
     non_snake_case,
     clippy::similar_names,
-    clippy::unsafe_derive_deserialize
+    clippy::unsafe_derive_deserialize,
+    clippy::module_name_repetitions
 )]
 //! Example
 //! ```ignore
@@ -37,12 +38,13 @@ use std::collections::HashMap;
 use std::mem::transmute;
 use std::{fmt, str};
 mod bitflags_util;
-pub mod intel;
 mod cpuid_ffi;
+pub mod intel;
 use bitflags::bitflags;
 #[allow(clippy::wildcard_imports)]
 use bitflags_util::*;
 pub use cpuid_ffi::*;
+pub use intel::*;
 use log_derive::{logfn, logfn_inputs};
 use serde::{Deserialize, Serialize};
 // -----------------------------------------------------------------------------
@@ -550,7 +552,7 @@ pub struct Cpuid {
     /// leaf 0x8000_001F
     #[serde(with = "p")]
     pub leaf0x8000_001F_cpuid_feature_bits: Leaf0x8000_001F_SubLeaf0_Eax,
-    /// To allow usability beyond what is immediately considered at the moment, for leafs we do not 
+    /// To allow usability beyond what is immediately considered at the moment, for leafs we do not
     /// explicitly describe we store them here in the format `<(leaf,subleaf),(eax,ebx,ecx,edx)>`.
     pub misc: HashMap<(u32, u32), (u32, u32, u32, u32)>,
 }

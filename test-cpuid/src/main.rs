@@ -23,10 +23,10 @@ fn main() {
     let _vcpu = vm.create_vcpu(0).unwrap();
     let kvm_cpuid = kvm.get_supported_cpuid(KVM_MAX_CPUID_ENTRIES).unwrap();
     check_err();
-    // println!("kvm_cpuid:");
-    // for x in kvm_cpuid.as_slice() {
-    //     println!("\t{:?}", x);
-    // }
+    println!("kvm_cpuid:");
+    for x in kvm_cpuid.as_slice() {
+        println!("\t{:?}", x);
+    }
 
     let cpuid = RawCpuid::from(kvm_cpuid);
     println!("cpuid:");

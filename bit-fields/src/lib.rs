@@ -857,36 +857,6 @@ impl<const P: u8> From<&Bit<u8, P>> for bool {
     }
 }
 
-impl<const P: u8> From<&Bit<u128, P>> for u8 {
-    fn from(this: &Bit<u128, P>) -> Self {
-        let a = unsafe { (*this.data() >> P) & 1 };
-        u8::try_from(a).unwrap()
-    }
-}
-impl<const P: u8> From<&Bit<u64, P>> for u8 {
-    fn from(this: &Bit<u64, P>) -> Self {
-        let a = unsafe { (*this.data() >> P) & 1 };
-        u8::try_from(a).unwrap()
-    }
-}
-impl<const P: u8> From<&Bit<u32, P>> for u8 {
-    fn from(this: &Bit<u32, P>) -> Self {
-        let a = unsafe { (*this.data() >> P) & 1 };
-        u8::try_from(a).unwrap()
-    }
-}
-impl<const P: u8> From<&Bit<u16, P>> for u8 {
-    fn from(this: &Bit<u16, P>) -> Self {
-        let a = unsafe { (*this.data() >> P) & 1 };
-        u8::try_from(a).unwrap()
-    }
-}
-impl<const P: u8> From<&Bit<u8, P>> for u8 {
-    fn from(this: &Bit<u8, P>) -> Self {
-        unsafe { (*this.data() >> P) & 1 }
-    }
-}
-
 // PartialEq impl
 impl<const P: u8> PartialEq for Bit<u128, P> {
     fn eq(&self, other: &Self) -> bool {

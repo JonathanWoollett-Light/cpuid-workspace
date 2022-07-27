@@ -777,9 +777,9 @@ bitfield!(Leaf7Subleaf0Ecx, u32, {
 bitfield!(Leaf7Subleaf0Edx, u32, {
     // Reserved
     /// AVX512_4VNNIW. (Intel® Xeon Phi™ only.)
-    avx512_4vnniw: 2
+    avx512_4vnniw: 2,
     /// AVX512_4FMAPS. (Intel® Xeon Phi™ only.)
-    avx512_4fmaps: 3
+    avx512_4fmaps: 3,
     /// Fast Short REP MOV.
     fast_short_rep_mov: 4,
     // Reserved 5..=7
@@ -819,7 +819,7 @@ bitfield!(Leaf7Subleaf0Edx, u32, {
     ia32_core_capabilities_msr_enum: 30,
     /// Enumerates support for Speculative Store Bypass Disable (SSBD). Processors that set this bit
     /// support the IA32_SPEC_CTRL MSR. They allow software to set IA32_SPEC_CTRL[2] (SSBD).
-    ssbd_enum: 31
+    ssbd_enum: 31,
 });
 #[rustfmt::skip]
 bitfield!(Leaf7Subleaf1Eax, u32, {
@@ -863,7 +863,7 @@ bitfield!(Leaf7Subleaf1Edx, u32, {
 #[rustfmt::skip]
 bitfield!(Leaf9Eax, u32, {
     /// Value of bits [31:0] of IA32_PLATFORM_DCA_CAP MSR (address 1F8H).
-    ia32_paltform_dca_cap_msr: 0..32
+    ia32_platform_dca_cap_msr: 0..32
 });
 #[rustfmt::skip]
 bitfield!(Leaf9Ebx, u32, {
@@ -1041,12 +1041,11 @@ bitfield!(LeafDSubleaf1Eax, u32, {
     /// Supports XSAVES/XRSTORS and IA32_XSS if set.
     xsaves_xrstors_ia32_xss: 3,
     // Reserved 0..32
-
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf1Ebx, u32, {
     /// The size in bytes of the XSAVE area containing all states enabled by XCRO | IA32_XSS.
-    xsave_size: 0..32
+    xsave_size: 0..32,
 });
 #[rustfmt::skip]
 bitfield!(LeafDSubleaf1Ecx, u32, {
@@ -1067,7 +1066,7 @@ bitfield!(LeafDSubleaf1Ecx, u32, {
     hdc_state: 13,
     // Reserved
     /// LBR state (architectural).
-    lbr_state: 15
+    lbr_state: 15,
     /// HWP state.
     hwp_state: 16,
     // Reserved 17..=31
@@ -1111,8 +1110,8 @@ type Leaf9 = Leaf<Leaf9Eax, Leaf9Ebx, Leaf9Ecx, Leaf9Edx>;
 type LeafA = Leaf<LeafAEax, LeafAEbx, LeafAEcx, LeafAEdx>;
 type LeafB = Leaf<LeafBEax, LeafBEbx, LeafBEcx, LeafBEdx>;
 // type LeafD = (LeafDSubleaf0,LeafDSubleaf1,Vec<LeafDSubleafGt1>);
-// type LeafDSubleaf0 = Leaf<LeafDSubleaf0Eax,LeafDSubleaf0Ebx,LeafDSubleaf0Ecx,LeafDSubleaf0Edx>;
-// type LeafDSubleaf1 = Leaf<LeafDSubleaf1Eax,LeafDSubleaf1Ebx,LeafDSubleaf1Ecx,LeafDSubleaf1Edx>;
+type LeafDSubleaf0 = Leaf<LeafDSubleaf0Eax, LeafDSubleaf0Ebx, LeafDSubleaf0Ecx, LeafDSubleaf0Edx>;
+type LeafDSubleaf1 = Leaf<LeafDSubleaf1Eax, LeafDSubleaf1Ebx, LeafDSubleaf1Ecx, LeafDSubleaf1Edx>;
 
 impl Leaf0 {
     #[logfn(Trace)]
@@ -1151,8 +1150,8 @@ impl Leaf5 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
-        self.eax.smallest_monitor_line_size() <= other.eax.smallest_monitor_line_size()
-            && self.ebx.largest_monitor_line_size() >= other.ebx.largest_monitor_line_size()
+        self.eax.smallest_monitor_line_size <= other.eax.smallest_monitor_line_size
+            && self.ebx.largest_monitor_line_size >= other.ebx.largest_monitor_line_size
             && self.ecx.superset(&other.ecx)
         // TODO edx
     }
@@ -1164,10 +1163,10 @@ impl Leaf6 {
         self.eax.superset(&self.eax)
             && self
                 .ebx
-                .number_of_interrupt_thresholds_in_digital_thermal_sensor()
+                .number_of_interrupt_thresholds_in_digital_thermal_sensor
                 >= other
                     .ebx
-                    .number_of_interrupt_thresholds_in_digital_thermal_sensor()
+                    .number_of_interrupt_thresholds_in_digital_thermal_sensor
         // TODO ecx
         // TODO edx
     }
@@ -1194,7 +1193,7 @@ impl Leaf9 {
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
         // TODO Can we use `>=` here instead?
-        self.eax.ia32_paltform_dca_cap_msr() == other.eax.ia32_paltform_dca_cap_msr()
+        self.eax.ia32_platform_dca_cap_msr == other.eax.ia32_platform_dca_cap_msr
     }
 }
 impl LeafA {
@@ -1205,13 +1204,28 @@ impl LeafA {
         todo!()
     }
 }
+impl LeafDSubleaf0 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl LeafDSubleaf1 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
 /// - Does not support Pentium III processor.
-/// - bit 22 of `IA32_MISC_ENABLE` equals 0.
+/// - Presumes bit 22 of `IA32_MISC_ENABLE` equals 0.
 /// - Presuming the flag `CPUID leaf 2 does not report cache descriptor information, use CPUID leaf
 ///   4 to query cache parameters` is present in leaf 2.
 /// - Does not support Intel® Xeon Phi™.
 #[derive(Debug)]
 pub struct IntelCpuid {
+    
     /// Basic CPUID Information
     pub leaf_0: Leaf0,
     /// Basic CPUID Information
@@ -1239,26 +1253,26 @@ pub struct IntelCpuid {
     /// Architectural Performance Monitoring Leaf
     pub leaf_a: LeafA,
     /// Extended Topology Enumeration Leaf
-    pub leaf_b: Vec<LeafB>, 
+    pub leaf_b: Vec<LeafB>,
     // /// Processor Extended State Enumeration Main Leaf
     // pub leaf_d: LeafD
 }
 impl IntelCpuid {
-    #[logfn(Trace)]
-    #[logfn_inputs(Info)]
-    pub fn supports(&self, other: &Self) -> bool {
-        self.leaf_0.supports(&other.leaf_0) &&
-        self.leaf_1.supports(&other.leaf_1) &&
-        self.leaf_2.supports(&other.leaf_2) &&
-        // TODO leaf 4
-        // self.leaf_4.supports(&other.leaf_4) &&
-        self.leaf_5.supports(&other.leaf_5) &&
-        self.leaf_6.supports(&other.leaf_6) &&
-        self.leaf_7.0.supports(&other.leaf_7.0) &&
-        // TODO leaf 7 subleaf 1
-        self.leaf_9.supports(&other.leaf_9) &&
-        self.leaf_a.supports(&other.leaf_a)
-    }
+    // #[logfn(Trace)]
+    // #[logfn_inputs(Info)]
+    // pub fn supports(&self, other: &Self) -> bool {
+    //     self.leaf_0.supports(&other.leaf_0) &&
+    //     self.leaf_1.supports(&other.leaf_1) &&
+    //     self.leaf_2.supports(&other.leaf_2) &&
+    //     // TODO leaf 4
+    //     // self.leaf_4.supports(&other.leaf_4) &&
+    //     self.leaf_5.supports(&other.leaf_5) &&
+    //     self.leaf_6.supports(&other.leaf_6) &&
+    //     self.leaf_7.0.supports(&other.leaf_7.0) &&
+    //     // TODO leaf 7 subleaf 1
+    //     self.leaf_9.supports(&other.leaf_9) &&
+    //     self.leaf_a.supports(&other.leaf_a)
+    // }
 }
 impl From<RawCpuid> for IntelCpuid {
     #[allow(clippy::too_many_lines)]
@@ -1311,7 +1325,7 @@ impl From<RawCpuid> for IntelCpuid {
                 LeafBEcx::from(raw_cpuid[leaf_b_offset].ecx),
                 LeafBEdx::from(raw_cpuid[leaf_b_offset].edx),
             ))];
-            while *vec[vec.len() - 1].ecx.level_type() != 0u32 {
+            while vec[vec.len() - 1].ecx.level_type != 0u32 {
                 leaf_b_offset += 1;
                 vec.push(LeafB::from((
                     LeafBEax::from(raw_cpuid[leaf_b_offset].eax),

@@ -1077,8 +1077,383 @@ bitfield!(LeafDSubleaf1Edx, u32, {
     // set to 1 only if EDX[n] is 1.
     // Reserved
 });
+// Leaf >1
+#[rustfmt::skip]
+bitfield!(LeafDSubleafGt1Eax, u32, {
+    /// The size in bytes (from the offset specified in EBX) of the save area for an extended state 
+    /// feature associated with a valid sub-leaf index, n.
+    save_area_size: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(LeafDSubleafGt1Ebx, u32, {
+    /// The offset in bytes of this extended state component’s save area from the beginning of the 
+    /// XSAVE/XRSTOR area.
+    /// 
+    /// This field reports 0 if the sub-leaf index, n, does not map to a valid bit in the XCR0 
+    /// register*.
+    ///
+    /// *If ECX contains an invalid sub-leaf index, EAX/EBX/ECX/EDX return 0. Sub-leaf n 
+    /// (0 ≤ n ≤ 31) is invalid if sub-leaf 0 returns 0 in EAX[n] and sub-leaf 1 returns 0 in 
+    /// ECX[n]. Sub-leaf n (32 ≤ n ≤ 63) is invalid if sub-leaf 0 returns 0 in EDX[n-32] and 
+    /// sub-leaf 1 returns 0 in EDX[n-32].
+    save_area_offset: 0..32
+});
+#[rustfmt::skip]
+bitfield!(LeafDSubleafGt1Ecx, u32, {
+    /// Is set if the bit n (corresponding to the sub-leaf index) is supported in the IA32_XSS MSR; 
+    /// it is clear if bit n is instead supported in XCR0.
+    ///
+    /// This field reports 0 if the sub-leaf index, n, is invalid*.
+    ///
+    /// *If ECX contains an invalid sub-leaf index, EAX/EBX/ECX/EDX return 0. Sub-leaf n 
+    /// (0 ≤ n ≤ 31) is invalid if sub-leaf 0 returns 0 in EAX[n] and sub-leaf 1 returns 0 in 
+    /// ECX[n]. Sub-leaf n (32 ≤ n ≤ 63) is invalid if sub-leaf 0 returns 0 in EDX[n-32] and 
+    /// sub-leaf 1 returns 0 in EDX[n-32].
+    supported_ia32_xss_msr: 0,
+    /// Is set if, when the compacted format of an XSAVE area is used, this extended state component
+    /// located on the next 64-byte boundary following the preceding state component (otherwise, it 
+    /// is located immediately following the preceding state component).
+    ///
+    /// This field reports 0 if the sub-leaf index, n, is invalid*.
+    ///
+    /// *If ECX contains an invalid sub-leaf index, EAX/EBX/ECX/EDX return 0. Sub-leaf n 
+    /// (0 ≤ n ≤ 31) is invalid if sub-leaf 0 returns 0 in EAX[n] and sub-leaf 1 returns 0 in 
+    /// ECX[n]. Sub-leaf n (32 ≤ n ≤ 63) is invalid if sub-leaf 0 returns 0 in EDX[n-32] and 
+    /// sub-leaf 1 returns 0 in EDX[n-32].
+    compacted_xsave_used: 1,
+    // 0..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(LeafDSubleafGt1Edx, u32, {
+    // This field reports 0 if the sub-leaf index, n, is invalid*; otherwise it is reserved.
+    // 0..=31 reserved
+});
 // -------------------------------------------------------------------------------------------------
-// struct definition
+// Leaf F
+// -------------------------------------------------------------------------------------------------
+// Leaf 0
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf0Eax, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf0Ebx, u32, {
+    /// Maximum range (zero-based) of RMID within this physical processor of all types.
+    max_rmid_range: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf0Ecx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf0Edx, u32, {
+    // Reserved
+    /// Supports L3 Cache Intel RDT Monitoring if 1.
+    l3_rdt_monitor: 1,
+    // 2..=32 reserved
+});
+// Leaf 1
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf1Eax, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf1Ebx, u32, {
+    /// Conversion factor from reported IA32_QM_CTR value to occupancy metric (bytes) and Memory 
+    /// Bandwidth Monitoring (MBM) metrics.
+    ia32_qm_ctr_conv_factor: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf1Ecx, u32, {
+    /// Maximum range (zero-based) of RMID of this resource type.
+    rmid_max: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(LeafFSubleaf1Edx, u32, {
+    /// Supports L3 occupancy monitoring if 1.
+    l3_occupancy_monitor: 0,
+    /// Supports L3 Total Bandwidth monitoring if 1.
+    l3_total_band_monitor: 1,
+    /// Supports L3 Local Bandwidth monitoring if 1.
+    l3_local_band_monitor: 2,
+    // 0..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 10
+// -------------------------------------------------------------------------------------------------
+// Leaf 0
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf0Eax, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf0Ebx, u32, {
+    // Reserved
+    /// Supports L3 Cache Allocation Technology if 1.
+    l3_alloc: 1,
+    /// Supports L2 Cache Allocation Technology if 1.
+    l2_alloc: 2,
+    /// Supports Memory Bandwidth Allocation if 1.
+    mem_band_alloc: 3,
+    // 04..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf0Ecx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf0Edx, u32, {
+    // Reserved
+});
+// Leaf 1
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf1Eax, u32, {
+    /// Length of the capacity bit mask for the corresponding ResID. Add one to the return value to 
+    /// get the result.
+    len_cap_resid_mask: 0..5,
+    // 5..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf1Ebx, u32, {
+    /// Bit-granular map of isolation/contention of allocation units.
+    granular_iso_cont_map: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf1Ecx, u32, {
+    // 0..=1 reserved
+    /// Code and Data Prioritization Technology supported if 1.
+    cd_prior: 2,
+    // 3..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf1Edx, u32, {
+    /// Highest COS number supported for this ResID.
+    highest_cos_resid: 0..16,
+    // 0..=31 reserved
+});
+// Leaf 2
+type Leaf10Subleaf2Eax = Leaf10Subleaf1Eax;
+type Leaf10Subleaf2Ebx = Leaf10Subleaf1Ebx;
+type Leaf10Subleaf2Ecx = Leaf10Subleaf1Ecx;
+type Leaf10Subleaf2Edx = Leaf10Subleaf1Edx;
+// Leaf 3
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf3Eax, u32, {
+    /// Reports the maximum MBA throttling value supported for the corresponding ResID. Add one to 
+    /// the return value to get the result.
+    max_mba_throt_resid: 0..12,
+    // reserved 12..=31
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf3Ebx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf3Ecx, u32, {
+    // 0..=1 reserved
+    /// Reports whether the response of the delay values is linear.
+    linear_response_delay_values: 2,
+    // 3..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf10Subleaf3Edx, u32, {
+    /// Highest COS number supported for this ResID.
+    highest_cos_resid: 0..16,
+    // 16..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 12
+// -------------------------------------------------------------------------------------------------
+// Leaf 0
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf0Eax, u32, {
+    /// SGX1. If 1, Indicates Intel SGX supports the collection of SGX1 leaf functions.
+    sgx1: 0,
+    /// SGX2. If 1, Indicates Intel SGX supports the collection of SGX2 leaf functions.
+    sgx2: 1,
+    // 2..=4 reserved
+    /// If 1, indicates Intel SGX supports ENCLV instruction leaves EINCVIRTCHILD, EDECVIRTCHILD,
+    /// and ESETCONTEXT.
+    enclv: 5,
+    /// If 1, indicates Intel SGX supports ENCLS instruction leaves ETRACKC, ERDINFO, ELDBC, and 
+    /// ELDUC.
+    encls: 6,
+    // 7..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf0Ebx, u32, {
+    /// MISCSELECT. Bit vector of supported extended SGX features.
+    miscselect: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf0Ecx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf0Edx, u32, {
+    /// MaxEnclaveSize_Not64. The maximum supported enclave size in non-64-bit mode is 2^(EDX[7:0]).
+    max_enclave_size_not_64: 0..8,
+    /// MaxEnclaveSize_64. The maximum supported enclave size in 64-bit mode is 2^(EDX[15:8]).
+    max_enclave_size_64: 8..16,
+    // 16..=31 reserved
+});
+// Leaf 1
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf1Eax, u32, {
+    /// Reports the valid bits of SECS.ATTRIBUTES[31:0] that software can set with ECREATE.
+    ecreate_attrs_0_31: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf1Ebx, u32, {
+    /// Reports the valid bits of SECS.ATTRIBUTES[63:32] that software can set with ECREATE.
+    ecreate_attrs_32_63: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf1Ecx, u32, {
+    /// Reports the valid bits of SECS.ATTRIBUTES[95:64] that software can set with ECREATE.
+    ecreate_attrs_64_95: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf12Subleaf1Edx, u32, {
+    /// Reports the valid bits of SECS.ATTRIBUTES[127:96] that software can set with ECREATE.
+    ecreate_attrs_96_127: 0..32,
+});
+// Leaf >1
+#[rustfmt::skip]
+bitfield!(Leaf12SubleafGt1Eax, u32, {
+    /// Sub-leaf Type
+    /// - 0000b: Indicates this sub-leaf is invalid.
+    /// - 0001b: This sub-leaf enumerates an EPC section. EBX:EAX and EDX:ECX provide information on the
+    /// Enclave Page Cache (EPC) section.
+    /// All other type encodings are reserved.
+    subleaf_type: 0..4,
+    /// Bits 31:12 of the physical address of the base of the EPC section.
+    ///
+    /// When EAX[03:00] = 0001b (otherwise 0)
+    epc_base_31_12: 12..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf12SubleafGt1Ebx, u32, {
+    /// Bits 51:32 of the physical address of the base of the EPC section.
+    ///
+    /// When EAX[03:00] = 0001b (otherwise 0)
+    epc_base_51_32: 0..20,
+    // 20..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf12SubleafGt1Ecx, u32, {
+    /// EPC section property encoding defined as follows:
+    /// - If ECX[3:0] = 0000b, then all bits of the EDX:ECX pair are enumerated as 0.
+    /// - If ECX[3:0] = 0001b, then this section has confidentiality and integrity protection.
+    /// - If ECX[3:0] = 0010b, then this section has confidentiality protection only.
+    /// All other encodings are reserved.
+    ///
+    /// When EAX[03:00] = 0001b (otherwise 0)
+    epc_section: 0..4,
+    // 4..=11 reserved
+    /// Bits 31:12 of the size of the corresponding EPC section within the Processor Reserved 
+    /// Memory.
+    ///
+    /// When EAX[03:00] = 0001b (otherwise 0)
+    epc_reserved_31_12: 12..32,
+
+});
+#[rustfmt::skip]
+bitfield!(Leaf12SubleafGt1Edx, u32, {
+    /// Bits 51:32 of the size of the corresponding EPC section within the Processor Reserved 
+    /// Memory.
+    ///
+    /// When EAX[03:00] = 0001b (otherwise 0)
+    epc_reserved_51_32: 0..20,
+    // 20..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 14
+// -------------------------------------------------------------------------------------------------
+// Leaf 0
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf0Eax, u32, {
+    /// Reports the maximum sub-leaf supported in leaf 14H.
+    ///
+    /// **At the moment of writing the Intel specification only notes the format of ECX=1, therefore
+    /// this field should only be 0 or 1**
+    max_subleaf: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf0Ebx, u32, {
+    /// If 1, indicates that IA32_RTIT_CTL.CR3Filter can be set to 1, and that IA32_RTIT_CR3_MATCH
+    /// MSR can be accessed.
+    ia32_rtit: 0,
+    /// If 1, indicates support of Configurable PSB and Cycle-Accurate Mode.
+    psb_config_cam: 1,
+    /// If 1, indicates support of IP Filtering, TraceStop filtering, and preservation of Intel PT 
+    /// MSRs across warm reset.
+    ip_filtering_and_ts_filtering_and_pt_msr_preservation: 2,
+    /// If 1, indicates support of MTC timing packet and suppression of COFI-based packets.
+    mtc_timing_and_cofi_suppression: 3,
+    /// If 1, indicates support of PTWRITE. Writes can set IA32_RTIT_CTL[12] (PTWEn) and 
+    /// IA32_RTIT_CTL[5] (FUPonPTW), and PTWRITE can generate packets.
+    ptwrite: 4,
+    /// If 1, indicates support of Power Event Trace. Writes can set IA32_RTIT_CTL[4] (PwrEvtEn), 
+    /// enabling Power Event Trace packet generation.
+    power_event_trace: 5,
+    /// If 1, indicates support for PSB and PMI preservation. Writes can set IA32_RTIT_CTL[56] 
+    /// (InjectPsbPmiOnEnable), enabling the processor to set IA32_RTIT_STATUS[7] (PendTopaPMI) 
+    /// and/or IA32_RTIT_STATUS[6] (PendPSB) in order to preserve ToPA PMIs and/or PSBs otherwise 
+    /// lost due to Intel PT disable. Writes can also set PendToPAPMI and PendPSB.
+    psb_and_pmi_preservation: 6,
+    /// If 1, writes can set IA32_RTIT_CTL[31] (EventEn), enabling Event Trace packet generation.
+    ia32_rtit_ctl_31: 7,
+    /// If 1, writes can set IA32_RTIT_CTL[55] (DisTNT), disabling TNT packet generation.
+    ia32_rtit_ctl_55: 8,
+    // 9..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf0Ecx, u32, {
+    /// If 1, Tracing can be enabled with IA32_RTIT_CTL.ToPA = 1, hence utilizing the ToPA output 
+    /// scheme; IA32_RTIT_OUTPUT_BASE and IA32_RTIT_OUTPUT_MASK_PTRS MSRs can be accessed.
+    ia32_rtit_ctl_topa: 0,
+    /// If 1, ToPA tables can hold any number of output entries, up to the maximum allowed by the 
+    /// MaskOrTableOffset field of IA32_RTIT_OUTPUT_MASK_PTRS.
+    topa_ext: 1,
+    /// If 1, indicates support of Single-Range Output scheme.
+    sros: 2,
+    /// If 1, indicates support of output to Trace Transport subsystem.
+    otts: 3,
+    // 4..=30 reserved
+    /// If 1, generated packets which contain IP payloads have LIP values, which include the CS base component.
+    lip_cs_base: 31,
+});
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf0Edx, u32, {
+    /// Reserved
+});
+// Leaf 1
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf1Eax, u32, {
+    /// Number of configurable Address Ranges for filtering.
+    configurable_filterig_addr_ranges: 0..3,
+    // 3..=15 reserved
+    /// Bitmap of supported MTC period encodings.
+    mtc_period_encodings: 16..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf1Ebx, u32, {
+    /// Bitmap of supported Cycle Threshold value encodings.
+    cycle_threshold_value_encodings: 0..16,
+    /// Bitmap of supported Configurable PSB frequency encodings.
+    configurable_psb_freq_encodings: 16..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf1Ecx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf14Subleaf1Edx, u32, {
+    // Reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf types
 // -------------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Leaf<A, B, C, D> {
@@ -1109,10 +1484,47 @@ type Leaf7Subleaf1 = Leaf<Leaf7Subleaf1Eax, Leaf7Subleaf1Ebx, Leaf7Subleaf1Ecx, 
 type Leaf9 = Leaf<Leaf9Eax, Leaf9Ebx, Leaf9Ecx, Leaf9Edx>;
 type LeafA = Leaf<LeafAEax, LeafAEbx, LeafAEcx, LeafAEdx>;
 type LeafB = Leaf<LeafBEax, LeafBEbx, LeafBEcx, LeafBEdx>;
-// type LeafD = (LeafDSubleaf0,LeafDSubleaf1,Vec<LeafDSubleafGt1>);
+type LeafD = (LeafDSubleaf0, LeafDSubleaf1, Vec<LeafDSubleafGt1>);
 type LeafDSubleaf0 = Leaf<LeafDSubleaf0Eax, LeafDSubleaf0Ebx, LeafDSubleaf0Ecx, LeafDSubleaf0Edx>;
 type LeafDSubleaf1 = Leaf<LeafDSubleaf1Eax, LeafDSubleaf1Ebx, LeafDSubleaf1Ecx, LeafDSubleaf1Edx>;
-
+type LeafDSubleafGt1 =
+    Leaf<LeafDSubleafGt1Eax, LeafDSubleafGt1Ebx, LeafDSubleafGt1Ecx, LeafDSubleafGt1Edx>;
+type LeafF = (LeafFSubleaf0, Option<LeafFSubleaf1>);
+type LeafFSubleaf0 = Leaf<LeafFSubleaf0Eax, LeafFSubleaf0Ebx, LeafFSubleaf0Ecx, LeafFSubleaf0Edx>;
+type LeafFSubleaf1 = Leaf<LeafFSubleaf1Eax, LeafFSubleaf1Ebx, LeafFSubleaf1Ecx, LeafFSubleaf1Edx>;
+type Leaf10 = (
+    Leaf10Subleaf0,
+    Option<Leaf10Subleaf1>,
+    Option<Leaf10Subleaf2>,
+    Option<Leaf10Subleaf3>,
+);
+type Leaf10Subleaf0 =
+    Leaf<Leaf10Subleaf0Eax, Leaf10Subleaf0Ebx, Leaf10Subleaf0Ecx, Leaf10Subleaf0Edx>;
+type Leaf10Subleaf1 =
+    Leaf<Leaf10Subleaf1Eax, Leaf10Subleaf1Ebx, Leaf10Subleaf1Ecx, Leaf10Subleaf1Edx>;
+type Leaf10Subleaf2 =
+    Leaf<Leaf10Subleaf2Eax, Leaf10Subleaf2Ebx, Leaf10Subleaf2Ecx, Leaf10Subleaf2Edx>;
+type Leaf10Subleaf3 =
+    Leaf<Leaf10Subleaf3Eax, Leaf10Subleaf3Ebx, Leaf10Subleaf3Ecx, Leaf10Subleaf3Edx>;
+type Leaf12 = (
+    Leaf12Subleaf0,
+    Option<Leaf12Subleaf1>,
+    Vec<Leaf12SubleafGt1>,
+);
+type Leaf12Subleaf0 =
+    Leaf<Leaf12Subleaf0Eax, Leaf12Subleaf0Ebx, Leaf12Subleaf0Ecx, Leaf12Subleaf0Edx>;
+type Leaf12Subleaf1 =
+    Leaf<Leaf12Subleaf1Eax, Leaf12Subleaf1Ebx, Leaf12Subleaf1Ecx, Leaf12Subleaf1Edx>;
+type Leaf12SubleafGt1 =
+    Leaf<Leaf12SubleafGt1Eax, Leaf12SubleafGt1Ebx, Leaf12SubleafGt1Ecx, Leaf12SubleafGt1Edx>;
+type Leaf14 = (Leaf14Subleaf0, Option<Leaf14Subleaf1>);
+type Leaf14Subleaf0 =
+    Leaf<Leaf14Subleaf0Eax, Leaf14Subleaf0Ebx, Leaf14Subleaf0Ecx, Leaf14Subleaf0Edx>;
+type Leaf14Subleaf1 =
+    Leaf<Leaf14Subleaf1Eax, Leaf14Subleaf1Ebx, Leaf14Subleaf1Ecx, Leaf14Subleaf1Edx>;
+// -------------------------------------------------------------------------------------------------
+// Supports
+// -------------------------------------------------------------------------------------------------
 impl Leaf0 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
@@ -1175,7 +1587,7 @@ impl Leaf7Subleaf0 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
-        self.eax.max_input_value_subleaf() >= other.eax.max_input_value_subleaf()
+        self.eax.max_input_value_subleaf >= other.eax.max_input_value_subleaf
             && self.ebx.superset(&self.ebx)
             && self.ecx.superset(&self.ecx)
             && self.edx.superset(&self.edx)
@@ -1218,6 +1630,80 @@ impl LeafDSubleaf1 {
         todo!()
     }
 }
+impl LeafFSubleaf0 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl LeafFSubleaf1 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf10Subleaf0 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf10Subleaf1 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf10Subleaf3 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf12Subleaf0 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf12Subleaf1 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf12SubleafGt1 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf14Subleaf0 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf14Subleaf1 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// Intel cpuid structure
+// -------------------------------------------------------------------------------------------------
 /// - Does not support Pentium III processor.
 /// - Presumes bit 22 of `IA32_MISC_ENABLE` equals 0.
 /// - Presuming the flag `CPUID leaf 2 does not report cache descriptor information, use CPUID leaf
@@ -1225,7 +1711,6 @@ impl LeafDSubleaf1 {
 /// - Does not support Intel® Xeon Phi™.
 #[derive(Debug)]
 pub struct IntelCpuid {
-    
     /// Basic CPUID Information
     pub leaf_0: Leaf0,
     /// Basic CPUID Information
@@ -1254,25 +1739,41 @@ pub struct IntelCpuid {
     pub leaf_a: LeafA,
     /// Extended Topology Enumeration Leaf
     pub leaf_b: Vec<LeafB>,
-    // /// Processor Extended State Enumeration Main Leaf
-    // pub leaf_d: LeafD
+    /// Processor Extended State Enumeration Main Leaf
+    pub leaf_d: LeafD,
+    /// Intel Resource Director Technology (Intel RDT) Monitoring Enumeration *and*
+    /// L3 Cache Intel RDT Monitoring Capability Enumeration
+    pub leaf_f: LeafF,
+    /// Intel Resource Director Technology (Intel RDT) Allocation Enumeration *and*
+    /// L3 Cache Allocation Technology Enumeration *and*
+    /// L2 Cache Allocation Technology Enumeration *and*
+    /// Memory Bandwidth Allocation Enumeration
+    pub leaf_10: Leaf10,
+    /// Intel SGX Capability Enumeration *and*
+    /// Intel SGX Attributes Enumeration *and*
+    /// Intel SGX EPC Enumeration
+    pub leaf_12: Leaf12,
+    /// Intel Processor Trace Enumeration
+    pub leaf_14: Leaf14, /* /// Time Stamp Counter and Nominal Core Crystal Clock Information
+                          * pub */
 }
 impl IntelCpuid {
-    // #[logfn(Trace)]
-    // #[logfn_inputs(Info)]
-    // pub fn supports(&self, other: &Self) -> bool {
-    //     self.leaf_0.supports(&other.leaf_0) &&
-    //     self.leaf_1.supports(&other.leaf_1) &&
-    //     self.leaf_2.supports(&other.leaf_2) &&
-    //     // TODO leaf 4
-    //     // self.leaf_4.supports(&other.leaf_4) &&
-    //     self.leaf_5.supports(&other.leaf_5) &&
-    //     self.leaf_6.supports(&other.leaf_6) &&
-    //     self.leaf_7.0.supports(&other.leaf_7.0) &&
-    //     // TODO leaf 7 subleaf 1
-    //     self.leaf_9.supports(&other.leaf_9) &&
-    //     self.leaf_a.supports(&other.leaf_a)
-    // }
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+        // self.leaf_0.supports(&other.leaf_0) &&
+        // self.leaf_1.supports(&other.leaf_1) &&
+        // self.leaf_2.supports(&other.leaf_2) &&
+        // // TODO leaf 4
+        // // self.leaf_4.supports(&other.leaf_4) &&
+        // self.leaf_5.supports(&other.leaf_5) &&
+        // self.leaf_6.supports(&other.leaf_6) &&
+        // self.leaf_7.0.supports(&other.leaf_7.0) &&
+        // // TODO leaf 7 subleaf 1
+        // self.leaf_9.supports(&other.leaf_9) &&
+        // self.leaf_a.supports(&other.leaf_a)
+    }
 }
 impl From<RawCpuid> for IntelCpuid {
     #[allow(clippy::too_many_lines)]
@@ -1294,30 +1795,37 @@ impl From<RawCpuid> for IntelCpuid {
             }
             vec
         };
-        println!(
-            "Leaf7Subleaf0Eax::from(raw_cpuid[leaf_4_offset + 3].eax): {}",
-            raw_cpuid[leaf_4_offset + 3].eax
-        );
+        let leaf_7_start = leaf_4_offset + 3;
         // for i in 0..15 {
         //     println!("raw_cpuid[{}].ebx: {}",i,raw_cpuid[i].ebx);
         // }
-        debug_assert_eq!(
-            raw_cpuid[leaf_4_offset + 3].ebx,
-            raw_cpuid.get(7, 0).unwrap().ebx
-        );
-        let leaf_7_offset = raw_cpuid[leaf_4_offset + 3].eax as usize;
-        debug_assert!(leaf_7_offset == 0 || leaf_7_offset == 1);
-        let leaf7_subleaves = if leaf_7_offset == 1 {
+        debug_assert_eq!(Some(&raw_cpuid[leaf_7_start]), raw_cpuid.get(7, 0));
+        let leaf_7_len = raw_cpuid[leaf_7_start].eax as usize;
+        dbg!(leaf_7_len);
+        debug_assert!(leaf_7_len == 0 || leaf_7_len == 1);
+        let leaf7_subleaves = if leaf_7_len == 1 {
             Some(Leaf7Subleaf1::from((
-                Leaf7Subleaf1Eax::from(raw_cpuid[leaf_4_offset + 3 + 1].eax),
-                Leaf7Subleaf1Ebx::from(raw_cpuid[leaf_4_offset + 3 + 1].ebx),
-                Leaf7Subleaf1Ecx::from(raw_cpuid[leaf_4_offset + 3 + 1].ecx),
-                Leaf7Subleaf1Edx::from(raw_cpuid[leaf_4_offset + 3 + 1].edx),
+                Leaf7Subleaf1Eax::from(raw_cpuid[leaf_7_start + 1].eax),
+                Leaf7Subleaf1Ebx::from(raw_cpuid[leaf_7_start + 1].ebx),
+                Leaf7Subleaf1Ecx::from(raw_cpuid[leaf_7_start + 1].ecx),
+                Leaf7Subleaf1Edx::from(raw_cpuid[leaf_7_start + 1].edx),
             )))
         } else {
             None
         };
-        let mut leaf_b_offset = leaf_4_offset + leaf_7_offset + 1;
+        let leaf_7 = (
+            Leaf7Subleaf0::from((
+                Leaf7Subleaf0Eax::from(raw_cpuid[leaf_7_start].eax),
+                Leaf7Subleaf0Ebx::from(raw_cpuid[leaf_7_start].ebx),
+                Leaf7Subleaf0Ecx::from(raw_cpuid[leaf_7_start].ecx),
+                Leaf7Subleaf0Edx::from(raw_cpuid[leaf_7_start].edx),
+            )),
+            leaf7_subleaves,
+        );
+        let leaf_7_offset = leaf_7_start + leaf_7_len;
+
+        let mut leaf_b_offset = leaf_7_offset + 4;
+        dbg!(leaf_b_offset);
         let leaf_b = {
             let mut vec = vec![LeafB::from((
                 LeafBEax::from(raw_cpuid[leaf_b_offset].eax),
@@ -1335,6 +1843,155 @@ impl From<RawCpuid> for IntelCpuid {
                 )));
             }
             vec
+        };
+        // dbg!(&raw_cpuid[leaf_b_offset+1]);
+        let leaf_d_start = leaf_b_offset + 2;
+        // dbg!(&raw_cpuid[leaf_d_start]);
+        let mut leaf_d_offset = leaf_d_start + 1;
+        // dbg!(&raw_cpuid[leaf_d_offset]);
+
+        // TODO Avoid using `function` to accmulate subleaf d values
+        let leaf_d_subleaves = {
+            let mut vec = Vec::new();
+            while raw_cpuid[leaf_d_offset + 1].function == 13 {
+                leaf_d_offset += 1;
+                vec.push(LeafDSubleafGt1::from((
+                    LeafDSubleafGt1Eax::from(raw_cpuid[leaf_d_offset].eax),
+                    LeafDSubleafGt1Ebx::from(raw_cpuid[leaf_d_offset].ebx),
+                    LeafDSubleafGt1Ecx::from(raw_cpuid[leaf_d_offset].ecx),
+                    LeafDSubleafGt1Edx::from(raw_cpuid[leaf_d_offset].edx),
+                )));
+            }
+            vec
+        };
+
+        let leaf_f_start = leaf_d_offset + 2;
+        debug_assert_eq!(Some(&raw_cpuid[leaf_f_start]), raw_cpuid.get(15, 0));
+        let mut leaf_f_offset = leaf_f_start;
+        let leaf_f = {
+            let subleaf0 = LeafFSubleaf0::from((
+                LeafFSubleaf0Eax::from(raw_cpuid[leaf_f_start].eax),
+                LeafFSubleaf0Ebx::from(raw_cpuid[leaf_f_start].ebx),
+                LeafFSubleaf0Ecx::from(raw_cpuid[leaf_f_start].ecx),
+                LeafFSubleaf0Edx::from(raw_cpuid[leaf_f_start].edx),
+            ));
+            let subleaf1 = (subleaf0.edx.l3_rdt_monitor == true).then(|| {
+                leaf_f_offset += 1;
+                LeafFSubleaf1::from((
+                    LeafFSubleaf1Eax::from(raw_cpuid[leaf_f_offset].eax),
+                    LeafFSubleaf1Ebx::from(raw_cpuid[leaf_f_offset].ebx),
+                    LeafFSubleaf1Ecx::from(raw_cpuid[leaf_f_offset].ecx),
+                    LeafFSubleaf1Edx::from(raw_cpuid[leaf_f_offset].edx),
+                ))
+            });
+            (subleaf0, subleaf1)
+        };
+        let leaf_10_start = leaf_f_offset + 1;
+        debug_assert_eq!(Some(&raw_cpuid[leaf_10_start]), raw_cpuid.get(16, 0));
+        let mut leaf10_offset = leaf_10_start;
+        let leaf_10 = {
+            let subleaf0 = Leaf10Subleaf0::from((
+                Leaf10Subleaf0Eax::from(raw_cpuid[leaf_10_start].eax),
+                Leaf10Subleaf0Ebx::from(raw_cpuid[leaf_10_start].ebx),
+                Leaf10Subleaf0Ecx::from(raw_cpuid[leaf_10_start].ecx),
+                Leaf10Subleaf0Edx::from(raw_cpuid[leaf_10_start].edx),
+            ));
+            // We use `bool::then` over `bool::then_some` as `bool::then_some` is eagerly
+            // evaluated.
+            let subleaf1 = (subleaf0.ebx.l3_alloc == true).then(|| {
+                leaf10_offset += 1;
+                Leaf10Subleaf1::from((
+                    Leaf10Subleaf1Eax::from(raw_cpuid[leaf10_offset].eax),
+                    Leaf10Subleaf1Ebx::from(raw_cpuid[leaf10_offset].ebx),
+                    Leaf10Subleaf1Ecx::from(raw_cpuid[leaf10_offset].ecx),
+                    Leaf10Subleaf1Edx::from(raw_cpuid[leaf10_offset].edx),
+                ))
+            });
+            let subleaf2 = (subleaf0.ebx.l2_alloc == true).then(|| {
+                leaf10_offset += 1;
+                Leaf10Subleaf2::from((
+                    Leaf10Subleaf2Eax::from(raw_cpuid[leaf10_offset].eax),
+                    Leaf10Subleaf2Ebx::from(raw_cpuid[leaf10_offset].ebx),
+                    Leaf10Subleaf2Ecx::from(raw_cpuid[leaf10_offset].ecx),
+                    Leaf10Subleaf2Edx::from(raw_cpuid[leaf10_offset].edx),
+                ))
+            });
+            let subleaf3 = (subleaf0.ebx.mem_band_alloc == true).then(|| {
+                leaf10_offset += 1;
+                Leaf10Subleaf3::from((
+                    Leaf10Subleaf3Eax::from(raw_cpuid[leaf10_offset].eax),
+                    Leaf10Subleaf3Ebx::from(raw_cpuid[leaf10_offset].ebx),
+                    Leaf10Subleaf3Ecx::from(raw_cpuid[leaf10_offset].ecx),
+                    Leaf10Subleaf3Edx::from(raw_cpuid[leaf10_offset].edx),
+                ))
+            });
+            (subleaf0, subleaf1, subleaf2, subleaf3)
+        };
+
+        let leaf_12_start = leaf10_offset + 2;
+        let leaf_12_offset = leaf_12_start;
+        debug_assert_eq!(Some(&raw_cpuid[leaf_12_start]), raw_cpuid.get(18, 0));
+        let leaf_12 = {
+            let subleaf0 = Leaf12Subleaf0::from((
+                Leaf12Subleaf0Eax::from(raw_cpuid[leaf_12_start].eax),
+                Leaf12Subleaf0Ebx::from(raw_cpuid[leaf_12_start].ebx),
+                Leaf12Subleaf0Ecx::from(raw_cpuid[leaf_12_start].ecx),
+                Leaf12Subleaf0Edx::from(raw_cpuid[leaf_12_start].edx),
+            ));
+            // Leaf 12H sub-leaf 1 (ECX = 1) is supported if CPUID.(EAX=07H, ECX=0H):EBX[SGX] = 1.
+            dbg!(leaf_7.0.ebx.sgx);
+            let (subleaf1, subleaf2) = if leaf_7.0.ebx.sgx == true {
+                unimplemented!(
+                    "Due to vagueness surrounding the number of subleaves this is currently not \
+                     supported"
+                );
+                // leaf_12_offset += 1;
+                // (
+                //     Some(Leaf12Subleaf1::from((
+                //         Leaf12Subleaf1Eax::from(raw_cpuid[leaf_12_offset].eax),
+                //         Leaf12Subleaf1Ebx::from(raw_cpuid[leaf_12_offset].ebx),
+                //         Leaf12Subleaf1Ecx::from(raw_cpuid[leaf_12_offset].ecx),
+                //         Leaf12Subleaf1Edx::from(raw_cpuid[leaf_12_offset].edx),
+                //     ))),
+                //     Vec::new(),
+                // )
+            } else { (None,Vec::new()) };
+            // Leaf 12H sub-leaf 2 or higher (ECX >= 2) is supported if
+            // CPUID.(EAX=07H, ECX=0H):EBX[SGX] = 1.
+            //
+            // For sub-leaves (ECX = 2 or higher), definition of EDX,ECX,EBX,EAX[31:4] depends on
+            // the sub-leaf type listed below.
+            (subleaf0, subleaf1, subleaf2)
+        };
+
+        let leaf_14_start = leaf_12_offset + 2;
+        let mut leaf_14_offset = leaf_14_start;
+        debug_assert_eq!(Some(&raw_cpuid[leaf_14_start]), raw_cpuid.get(19, 0));
+        let leaf_14 = {
+            let subleaf0 = Leaf14Subleaf0::from((
+                Leaf14Subleaf0Eax::from(raw_cpuid[leaf_14_start].eax),
+                Leaf14Subleaf0Ebx::from(raw_cpuid[leaf_14_start].ebx),
+                Leaf14Subleaf0Ecx::from(raw_cpuid[leaf_14_start].ecx),
+                Leaf14Subleaf0Edx::from(raw_cpuid[leaf_14_start].edx),
+            ));
+            let subleaf1 = match u32::from(&subleaf0.eax.max_subleaf) {
+                
+                1 => {
+                    leaf_14_offset += 1;
+                    Some(Leaf14Subleaf1::from((
+                        Leaf14Subleaf1Eax::from(raw_cpuid[leaf_14_offset].eax),
+                        Leaf14Subleaf1Ebx::from(raw_cpuid[leaf_14_offset].ebx),
+                        Leaf14Subleaf1Ecx::from(raw_cpuid[leaf_14_offset].ecx),
+                        Leaf14Subleaf1Edx::from(raw_cpuid[leaf_14_offset].edx),
+                    )))
+                }
+                0 => None,
+                // TODO Add specific spec version
+                _ => unimplemented!(
+                    "The Intel specification does not describe subleaves of leaf 14h beyound 1."
+                ),
+            };
+            (subleaf0, subleaf1)
         };
 
         Self {
@@ -1369,28 +2026,39 @@ impl From<RawCpuid> for IntelCpuid {
                 Leaf6Ecx::from(raw_cpuid[leaf_4_offset + 2].ecx),
                 Leaf6Edx::from(raw_cpuid[leaf_4_offset + 2].edx),
             )),
-            leaf_7: (
-                Leaf7Subleaf0::from((
-                    Leaf7Subleaf0Eax::from(raw_cpuid[leaf_4_offset + 3].eax),
-                    Leaf7Subleaf0Ebx::from(raw_cpuid[leaf_4_offset + 3].ebx),
-                    Leaf7Subleaf0Ecx::from(raw_cpuid[leaf_4_offset + 3].ecx),
-                    Leaf7Subleaf0Edx::from(raw_cpuid[leaf_4_offset + 3].edx),
-                )),
-                leaf7_subleaves,
-            ),
+            leaf_7,
             leaf_9: Leaf9::from((
-                Leaf9Eax::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 5].eax),
-                Leaf9Ebx::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 5].ebx),
-                Leaf9Ecx::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 5].ecx),
-                Leaf9Edx::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 5].edx),
+                Leaf9Eax::from(raw_cpuid[leaf_7_offset + 2].eax),
+                Leaf9Ebx::from(raw_cpuid[leaf_7_offset + 2].ebx),
+                Leaf9Ecx::from(raw_cpuid[leaf_7_offset + 2].ecx),
+                Leaf9Edx::from(raw_cpuid[leaf_7_offset + 2].edx),
             )),
             leaf_a: LeafA::from((
-                LeafAEax::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 6].eax),
-                LeafAEbx::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 6].ebx),
-                LeafAEcx::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 6].ecx),
-                LeafAEdx::from(raw_cpuid[leaf_4_offset + leaf_7_offset + 6].edx),
+                LeafAEax::from(raw_cpuid[leaf_7_offset + 3].eax),
+                LeafAEbx::from(raw_cpuid[leaf_7_offset + 3].ebx),
+                LeafAEcx::from(raw_cpuid[leaf_7_offset + 3].ecx),
+                LeafAEdx::from(raw_cpuid[leaf_7_offset + 3].edx),
             )),
             leaf_b,
+            leaf_d: (
+                LeafDSubleaf0::from((
+                    LeafDSubleaf0Eax::from(raw_cpuid[leaf_d_start].eax),
+                    LeafDSubleaf0Ebx::from(raw_cpuid[leaf_d_start].ebx),
+                    LeafDSubleaf0Ecx::from(raw_cpuid[leaf_d_start].ecx),
+                    LeafDSubleaf0Edx::from(raw_cpuid[leaf_d_start].edx),
+                )),
+                LeafDSubleaf1::from((
+                    LeafDSubleaf1Eax::from(raw_cpuid[leaf_d_start + 1].eax),
+                    LeafDSubleaf1Ebx::from(raw_cpuid[leaf_d_start + 1].ebx),
+                    LeafDSubleaf1Ecx::from(raw_cpuid[leaf_d_start + 1].ecx),
+                    LeafDSubleaf1Edx::from(raw_cpuid[leaf_d_start + 1].edx),
+                )),
+                leaf_d_subleaves,
+            ),
+            leaf_f,
+            leaf_10,
+            leaf_12,
+            leaf_14,
         }
     }
 }

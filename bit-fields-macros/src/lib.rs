@@ -108,7 +108,7 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
     let mut fields_union_fn = String::new();
     let mut struct_bit_range_definitions = String::new();
     let mut struct_doc_table_layout =
-        String::from("/// \t<tr><th>Bit/s</th><th>Identifier</th><th>Descripton</th></tr>\n");
+        String::from("///     <tr><th>Bit/s</th><th>Identifier</th><th>Descripton</th></tr>\n");
     let mut struct_member_fields = String::new();
     let mut struct_member_fields_initialization = String::new();
     // Top border
@@ -149,18 +149,18 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
     let mut pre_existing = HashSet::new();
     let mut rustdoc = String::new();
     loop {
-        eprintln!("rustdoc: {}", rustdoc);
+        // dbg!("rustdoc: {}", rustdoc);
         let next = fields_iter.next();
-        eprintln!("next: {:?}", next);
+        // dbg!("next: {:?}", next);
         let field_ident = match next {
             Some(TokenTree::Punct(doc_comment_punct)) if doc_comment_punct.as_char() == '#' => {
-                eprintln!("doc_comment_punct: {:?}", doc_comment_punct);
+                // dbg!("doc_comment_punct: {:?}", doc_comment_punct);
                 if let Some(TokenTree::Group(doc_group)) = fields_iter.next() {
-                    eprintln!("doc_group: {:?}", doc_group);
+                    // dbg!("doc_group: {:?}", doc_group);
                     if let Some(TokenTree::Literal(doc_comment_comment)) =
                         doc_group.stream().into_iter().nth(2)
                     {
-                        eprintln!("doc_comment_comment: {:?}", doc_comment_comment);
+                        // dbg!("doc_comment_comment: {:?}", doc_comment_comment);
                         let temp = doc_comment_comment.to_string();
                         // Remove " from start and end (TODO Do this better)
                         let temp = temp
@@ -196,7 +196,7 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
             Some(wrong_field) => return diagnostic(wrong_field.span(), "Identifier missing"),
             None => break,
         };
-        eprintln!("field_ident: {:?}", field_ident);
+        // dbg!("field_ident: {:?}", field_ident);
         // Punct,Literal,Punct,Punct,Literal == Range
         // Punct,Literal,Punct,Literal
         let field_start_pos = match fields_iter.nth(1) {
@@ -233,7 +233,7 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
             }
             _ => return diagnostic(field_ident.span(), "Position missing"),
         };
-        eprintln!("field_start_pos: {:?}", field_start_pos);
+        // dbg!("field_start_pos: {:?}", field_start_pos);
 
         let mut add_bit_flags = || {
             // Set display string
@@ -263,7 +263,7 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
 
             writeln!(
                 &mut struct_doc_table_layout,
-                "/// \t<tr><td>{start:02}</td><td>{}</td><td>{}</td></tr>",
+                "///     <tr><td>{start:02}</td><td>{}</td><td>{}</td></tr>",
                 field_ident, rustdoc
             )
             .unwrap();
@@ -394,7 +394,7 @@ pub fn bitfield(item: TokenStream) -> TokenStream {
 
                             writeln!(
                                 &mut struct_doc_table_layout,
-                                "/// \t<tr><td>{:02}..={:02}</td><td>{}</td><td>{}</td></tr>",
+                                "///     <tr><td>{:02}..={:02}</td><td>{}</td><td>{}</td></tr>",
                                 start,
                                 end - 1,
                                 field_ident,
@@ -591,7 +591,7 @@ fn split_space(s: &str, l: usize) -> Vec<String> {
         }
     }
     lines.push(chars[i..].iter().collect::<String>());
-    eprintln!("split_space end");
+    // dbg!("split_space end");
 
     lines
 }

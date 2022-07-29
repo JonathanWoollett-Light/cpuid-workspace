@@ -1,4 +1,5 @@
 use std::alloc::Layout;
+use std::fmt;
 use std::ops::Index;
 
 // Stuff to use for interaction with ffi.
@@ -145,6 +146,18 @@ impl From<RawCpuid> for kvm_bindings::CpuId {
 impl From<RawCpuidEntry> for (u32, u32, u32, u32) {
     fn from(this: RawCpuidEntry) -> Self {
         (this.eax, this.ebx, this.ecx, this.edx)
+    }
+}
+impl fmt::LowerHex for RawCpuidEntry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("RawCpuidEntry")
+            .field("function", &format!("{:x}", self.function))
+            .field("index", &format!("{:x}", self.index))
+            .field("eax", &format!("{:x}", self.eax))
+            .field("ebx", &format!("{:x}", self.ebx))
+            .field("ecx", &format!("{:x}", self.ecx))
+            .field("edx", &format!("{:x}", self.edx))
+            .finish()
     }
 }
 

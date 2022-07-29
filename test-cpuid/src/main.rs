@@ -31,7 +31,7 @@ fn main() {
     let cpuid = RawCpuid::from(kvm_cpuid);
     println!("cpuid:");
     for x in cpuid.iter() {
-        println!("\t{:?}", x);
+        println!("\t{:x}", x);
     }
     let intel_cpuid = IntelCpuid::from(cpuid);
     // println!("intel_cpuid: {:#?}", intel_cpuid);
@@ -44,11 +44,18 @@ fn main() {
     // println!("intel_cpuid.leaf_2: {}", intel_cpuid.leaf_2);
 
     println!(
-        "intel_cpuid.leaf_10.0: {} {} {} {}",
-        intel_cpuid.leaf_10.0.eax,
-        intel_cpuid.leaf_10.0.ebx,
-        intel_cpuid.leaf_10.0.ecx,
-        intel_cpuid.leaf_10.0.edx
+        "intel_cpuid.leaf_80000006: {} {} {} {}",
+        intel_cpuid.leaf_80000006.eax,
+        intel_cpuid.leaf_80000006.ebx,
+        intel_cpuid.leaf_80000006.ecx,
+        intel_cpuid.leaf_80000006.edx
+    );
+    println!(
+        "intel_cpuid.leaf_80000008: {} {} {} {}",
+        intel_cpuid.leaf_80000008.eax,
+        intel_cpuid.leaf_80000008.ebx,
+        intel_cpuid.leaf_80000008.ecx,
+        intel_cpuid.leaf_80000008.edx
     );
 
     fn check_err() {

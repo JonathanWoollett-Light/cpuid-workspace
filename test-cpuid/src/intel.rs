@@ -1453,8 +1453,675 @@ bitfield!(Leaf14Subleaf1Edx, u32, {
     // Reserved
 });
 // -------------------------------------------------------------------------------------------------
+// Leaf 15
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf15Eax, u32, {
+    /// An unsigned integer which is the denominator of the TSC/”core crystal clock” ratio.
+    ///
+    /// If EBX[31:0] is 0, the TSC/”core crystal clock” ratio is not enumerated. EBX[31:0]/EAX[31:0]
+    /// indicates the ratio of the TSC frequency and the core crystal clock frequency. If ECX is 0, 
+    /// the nominal core crystal clock frequency is not enumerated. “TSC frequency” = “core crystal 
+    /// clock frequency” * EBX/EAX. The core crystal clock may differ from the reference clock, bus 
+    /// clock, or core clock frequencies.
+    tsc_denominator: 0..32,
+
+});
+#[rustfmt::skip]
+bitfield!(Leaf15Ebx, u32, {
+    /// An unsigned integer which is the numerator of the TSC/”core crystal clock” ratio.
+    ///
+    /// If EBX[31:0] is 0, the TSC/”core crystal clock” ratio is not enumerated. EBX[31:0]/EAX[31:0]
+    /// indicates the ratio of the TSC frequency and the core crystal clock frequency. If ECX is 0, 
+    /// the nominal core crystal clock frequency is not enumerated. “TSC frequency” = “core crystal 
+    /// clock frequency” * EBX/EAX. The core crystal clock may differ from the reference clock, bus 
+    /// clock, or core clock frequencies.
+    tsc_numerator: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf15Ecx, u32, {
+    /// An unsigned integer which is the nominal frequency of the core crystal clock in Hz.
+    ///
+    /// If EBX[31:0] is 0, the TSC/”core crystal clock” ratio is not enumerated. EBX[31:0]/EAX[31:0]
+    /// indicates the ratio of the TSC frequency and the core crystal clock frequency. If ECX is 0, 
+    /// the nominal core crystal clock frequency is not enumerated. “TSC frequency” = “core crystal 
+    /// clock frequency” * EBX/EAX. The core crystal clock may differ from the reference clock, bus 
+    /// clock, or core clock frequencies.
+    nominal_freqeuncy: 0..32
+});
+#[rustfmt::skip]
+bitfield!(Leaf15Edx, u32, {
+    /// Reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 16
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf16Eax, u32, {
+    /// Processor Base Frequency (in MHz).
+    base_frequency: 0..15,
+    // 15..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf16Ebx, u32, {
+    /// Maximum Frequency (in MHz).
+    max_frequency: 0..15,
+    // 15..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf16Ecx, u32, {
+    /// Bus (Reference) Frequency (in MHz).
+    ref_frequency: 0..15,
+    // 15..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf16Edx, u32, {
+    /// Reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 17
+// -------------------------------------------------------------------------------------------------
+// leaf 0
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf0Eax, u32, {
+    /// MaxSOCID_Index. Reports the maximum input value of supported sub-leaf in leaf 17H.
+    max_socid_index: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf0Ebx, u32, {
+    /// SOC Vendor ID.
+    soc_vendor_id: 0..16,
+    /// IsVendorScheme. If 1, the SOC Vendor ID field is assigned via an industry standard
+    /// enumeration scheme. Otherwise, the SOC Vendor ID field is assigned by Intel.
+    is_vendor_scheme: 16,
+    // 17..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf0Ecx, u32, {
+    /// Project ID. A unique number an SOC vendor assigns to its SOC projects.
+    project_id: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf0Edx, u32, {
+    /// Stepping ID. A unique number within an SOC project that an SOC vendor assigns.
+    stepping_id: 0..32,
+});
+// leaf 1
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf1Eax, u32, {
+    /// SOC Vendor Brand String. UTF-8 encoded string.
+    ///
+    /// Leaf 17H output depends on the initial value in ECX. SOC Vendor Brand String is a UTF-8 
+    /// encoded string padded with trailing bytes of 00H. The complete SOC Vendor Brand String is 
+    /// constructed by concatenating in ascending order of EAX:EBX:ECX:EDX and from the sub-leaf 1
+    /// fragment towards sub-leaf 3.
+    soc_string: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf1Ebx, u32, {
+    /// SOC Vendor Brand String. UTF-8 encoded string.
+    ///
+    /// Leaf 17H output depends on the initial value in ECX. SOC Vendor Brand String is a UTF-8 
+    /// encoded string padded with trailing bytes of 00H. The complete SOC Vendor Brand String is 
+    /// constructed by concatenating in ascending order of EAX:EBX:ECX:EDX and from the sub-leaf 1
+    /// fragment towards sub-leaf 3.
+    soc_string: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf1Ecx, u32, {
+    /// SOC Vendor Brand String. UTF-8 encoded string.
+    ///
+    /// Leaf 17H output depends on the initial value in ECX. SOC Vendor Brand String is a UTF-8 
+    /// encoded string padded with trailing bytes of 00H. The complete SOC Vendor Brand String is 
+    /// constructed by concatenating in ascending order of EAX:EBX:ECX:EDX and from the sub-leaf 1
+    /// fragment towards sub-leaf 3.
+    soc_string: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf17Subleaf1Edx, u32, {
+    /// SOC Vendor Brand String. UTF-8 encoded string.
+    ///
+    /// Leaf 17H output depends on the initial value in ECX. SOC Vendor Brand String is a UTF-8 
+    /// encoded string padded with trailing bytes of 00H. The complete SOC Vendor Brand String is 
+    /// constructed by concatenating in ascending order of EAX:EBX:ECX:EDX and from the sub-leaf 1
+    /// fragment towards sub-leaf 3.
+    soc_string: 0..32,
+});
+// leaf >3
+#[rustfmt::skip]
+bitfield!(Leaf17SubleafGt3Eax, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf17SubleafGt3Ebx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf17SubleafGt3Ecx, u32, {
+    // Reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf17SubleafGt3Edx, u32, {
+    // Reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 18
+// -------------------------------------------------------------------------------------------------
+// leaf 0
+#[rustfmt::skip]
+bitfield!(Leaf18Subleaf0Eax, u32, {
+    /// Reports the maximum input value of supported sub-leaf in leaf 18H.
+    max_subleaf: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf18Subleaf0Ebx, u32, {
+    /// 4K page size entries supported by this structure.
+    page_4k: 0,
+    /// 2MB page size entries supported by this structure.
+    page_2m: 1,
+    /// 4MB page size entries supported by this structure.
+    page_4m: 2,
+    /// 1 GB page size entries supported by this structure.
+    page_3g: 3,
+    // 4..=7 reserved
+    /// Partitioning (0: Soft partitioning between the logical processors sharing this structure).
+    partitioning: 8..16,
+    // 11..=15 reserved
+    /// W = Ways of associativity.
+    ways_of_associativity: 16..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf18Subleaf0Ecx, u32, {
+    /// S = Number of Sets.
+    number_of_sets: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf18Subleaf0Edx, u32, {
+    /// Translation cache type field.
+    /// - 00000b: Null (indicates this sub-leaf is not valid).
+    /// - 00001b: Data TLB.
+    /// - 00010b: Instruction TLB.
+    /// - 00011b: Unified TLB*.
+    /// - 00100b: Load Only TLB. Hit on loads; fills on both loads and stores.
+    /// - 00101b: Store Only TLB. Hit on stores; fill on stores.
+    /// All other encodings are reserved.
+    ///
+    /// * Some unified TLBs will allow a single TLB entry to satisfy data read/write and instruction
+    /// fetches. Others will require separate entries (e.g., one loaded on data read/write and 
+    /// another loaded on an instruction fetch) . Please see the Intel® 64 and IA-32 Architectures 
+    /// Optimization Reference Manual for details of a particular product.
+    translation_cache_type: 0..5,
+    /// Translation cache level (starts at 1).
+    translation_cache_level: 5..8,
+    /// Fully associative structure.
+    fully_associative_structure: 8,
+    // 9..=13 reserved
+    /// Maximum number of addressable IDs for logical processors sharing this translation cache**
+    ///
+    /// **Add one to the return value to get the result.
+    max_addressable_ids: 14..26,
+    // 26..=31 reserved
+});
+// leaf >0
+#[rustfmt::skip]
+bitfield!(Leaf18SubleafGt0Eax, u32, {
+    // reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf18SubleafGt0Ebx, u32, {
+    /// 4K page size entries supported by this structure.
+    page_4k: 0,
+    /// 2MB page size entries supported by this structure.
+    page_2m: 1,
+    /// 4MB page size entries supported by this structure.
+    page_4m: 2,
+    /// 1 GB page size entries supported by this structure.
+    page_3g: 3,
+    // 4..=7 reserved
+    /// Partitioning (0: Soft partitioning between the logical processors sharing this structure).
+    partitioning: 8..16,
+    // 11..=15 reserved
+    /// W = Ways of associativity.
+    ways_of_associativity: 16..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf18SubleafGt0Ecx, u32, {
+    /// S = Number of Sets.
+    number_of_sets: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf18SubleafGt0Edx, u32, {
+    /// Translation cache type field.
+    /// - 00000b: Null (indicates this sub-leaf is not valid).
+    /// - 00001b: Data TLB.
+    /// - 00010b: Instruction TLB.
+    /// - 00011b: Unified TLB*.
+    /// - 00100b: Load Only TLB. Hit on loads; fills on both loads and stores.
+    /// - 00101b: Store Only TLB. Hit on stores; fill on stores.
+    /// All other encodings are reserved.
+    ///
+    /// * Some unified TLBs will allow a single TLB entry to satisfy data read/write and instruction
+    /// fetches. Others will require separate entries (e.g., one loaded on data read/write and 
+    /// another loaded on an instruction fetch) . Please see the Intel® 64 and IA-32 Architectures 
+    /// Optimization Reference Manual for details of a particular product.
+    translation_cache_type: 0..5,
+    /// Translation cache level (starts at 1).
+    translation_cache_level: 5..8,
+    /// Fully associative structure.
+    fully_associative_structure: 8,
+    // 9..=13 reserved
+    /// Maximum number of addressable IDs for logical processors sharing this translation cache**
+    ///
+    /// **Add one to the return value to get the result.
+    max_addressable_ids: 14..26,
+    // 26..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 19
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf19Eax, u32, {
+    /// Key Locker restriction of CPL0-only supported.
+    cpl0_only: 0,
+    /// Key Locker restriction of no-encrypt supported.
+    no_encrypt: 1,
+    /// Key Locker restriction of no-decrypt supported.
+    no_decrypt: 2,
+    // 3..=31 reserved
+
+});
+#[rustfmt::skip]
+bitfield!(Leaf19Ebx, u32, {
+    /// AESKLE. If 1, the AES Key Locker instructions are fully enabled.
+    aeskle: 0,
+    // Reserved.
+    /// If 1, the AES wide Key Locker instructions are supported.
+    aes_wide_key_locker: 2,
+    // Reserved
+    /// If 1, the platform supports the Key Locker MSRs (IA32_COPY_LOCAL_TO_PLATFORM, 
+    /// IA23_COPY_PLATFORM_TO_LOCAL, IA32_COPY_STATUS, and IA32_IWKEYBACKUP_STATUS) and backing up 
+    /// the internal wrapping key.
+    key_locker_msrs: 4,
+    // 5..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf19Ecx, u32, {
+    /// If 1, the NoBackup parameter to LOADIWKEY is supported.
+    loadikey_no_backup: 0,
+    key_source_encoding_one: 1,
+    // 2..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf19Edx, u32, {
+    // reserved.
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 1A
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf1AEax, u32, {
+    /// Native model ID of the core. The core-type and native model ID can be used to uniquely 
+    /// identify the microarchitecture of the core. This native model ID is not unique across core 
+    /// types, and not related to the model ID reported in CPUID leaf 01H, and does not identify the
+    /// SOC.
+    native_id: 0..24,
+    /// Core type
+    /// - 10H: Reserved
+    /// - 20H: Intel Atom®
+    /// - 30H: Reserved
+    /// - 40H: Intel® Core™
+    core_type: 24..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf1AEbx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf1AEcx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf1AEdx, u32, {
+    // Reserved.
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 1B
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf1BEax, u32, {
+    // TODO
+});
+#[rustfmt::skip]
+bitfield!(Leaf1BEbx, u32, {
+    // TODO
+});
+#[rustfmt::skip]
+bitfield!(Leaf1BEcx, u32, {
+    // TODO
+});
+#[rustfmt::skip]
+bitfield!(Leaf1BEdx, u32, {
+    // TODO
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 1C
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf1CEax, u32, {
+    /// Supported LBR Depth Values. For each bit n set in this field, the IA32_LBR_DEPTH.DEPTH value
+    /// 8*(n+1) is supported.
+    lbr_depth_values: 0..8,
+    // 9..=28 reserved
+    /// Deep C-state Reset. If set, indicates that LBRs may be cleared on an MWAIT that requests a 
+    /// C-state numerically greater than C1.
+    deep_c_state: 30,
+    /// IP Values Contain LIP. If set, LBR IP values contain LIP. If clear, IP values contain Effective IP.
+    ip_values_contain_lip: 31,
+});
+#[rustfmt::skip]
+bitfield!(Leaf1CEbx, u32, {
+    /// CPL Filtering Supported. If set, the processor supports setting IA32_LBR_CTL[2:1] to 
+    /// non-zero value.
+    cpl_filtering: 0,
+    /// Branch Filtering Supported. If set, the processor supports setting IA32_LBR_CTL[22:16] to 
+    /// nonzero value.
+    branch_filtering: 1,
+    /// Call-stack Mode Supported. If set, the processor supports setting IA32_LBR_CTL[3] to 1.
+    call_stack_mode: 2,
+    // 3..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf1CEcx, u32, {
+    /// Mispredict Bit Supported. IA32_LBR_x_INFO[63] holds indication of branch misprediction 
+    /// (MISPRED).
+    mispredict_bit: 0,
+    /// Timed LBRs Supported. IA32_LBR_x_INFO[15:0] holds CPU cycles since last LBR entry (CYC_CNT),
+    /// and IA32_LBR_x_INFO[60] holds an indication of whether the value held there is valid 
+    /// (CYC_CNT_VALID).
+    timed_lbrs: 1,
+    /// Branch Type Field Supported. IA32_LBR_INFO_x[59:56] holds indication of the recorded 
+    /// operation's branch type (BR_TYPE).
+    branch_type_field: 2,
+    // 3..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf1CEdx, u32, {
+    // 3..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 1F
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf1FEax, u32, {
+    /// Number of bits to shift right on x2APIC ID to get a unique topology ID of the next level 
+    /// type*. All logical processors with the same next level ID share current level.
+    right_shift_2xapic_id_unique_top_id: 0..5,
+    // 5..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf1FEbx, u32, {
+    /// Number of logical processors at this level type. The number reflects configuration as 
+    /// shipped by Intel**.
+    ///
+    /// ** Software must not use EBX[15:0] to enumerate processor topology of the system. This value
+    /// in this field (EBX[15:0]) is only intended for display/diagnostic purposes. The actual 
+    /// number of logical processors available to BIOS/OS/Applications may be different from the 
+    /// value of EBX[15:0], depending on software and platform hardware configurations.
+    logical_processors: 0..16,
+    // 16..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf1FEcx, u32, {
+    /// Level number. Same value in ECX input.
+    level_number: 0..8,
+    /// Level type***.
+    ///
+    /// *** The value of the “level type” field is not related to level numbers in any way, higher 
+    /// “level type” values do not mean higher levels. Level type field has the following encoding:
+    ///
+    /// - 0: Invalid.
+    /// - 1: SMT.
+    /// - 2: Core.
+    /// - 3: Module.
+    /// - 4: Tile.
+    /// - 5: Die.
+    /// - 6-255: Reserved.
+    level_type: 8..16,
+    // 16..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf1FEdx, u32, {
+    /// x2APIC ID the current logical processor.
+    x2apic_id: 0..32,
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 20
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf20Eax, u32, {
+    /// Reports the maximum number of sub-leaves that are supported in leaf 20H.
+    max_subleaves: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf20Ebx, u32, {
+    // Indicates which bits may be set in the IA32_HRESET_ENABLE MSR to enable reset of different 
+    // components of hardware-maintained history.
+
+    /// Indicates support for both HRESET’s EAX[0] parameter, and IA32_HRESET_ENABLE[0] set by the 
+    /// OS to enable reset of Intel® Thread Director history.
+    hreset: 0,
+    // 1..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf20Ecx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf20Edx, u32, {
+    // Reserved.
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000000
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000000Eax, u32, {
+    /// Maximum Input Value for Extended Function CPUID Information.
+    max_extend_function_input: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000000Ebx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000000Ecx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000000Edx, u32, {
+    // Reserved.
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000001
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000001Eax, u32, {
+    /// Extended Processor Signature and Feature Bits.
+    extended_processor_signature_and_feature_bits: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000001Ebx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000001Ecx, u32, {
+    /// LAHF/SAHF available in 64-bit mode.*
+    ///
+    /// * LAHF and SAHF are always available in other modes, regardless of the enumeration of this 
+    /// feature flag.
+    lahf_sahf: 0,
+    // 1..=4 reserved
+    /// LZCNT.
+    lzcnt: 5,
+    // 6..=7 reserved
+    /// PREFETCHW.
+    prefetchcw: 8,
+    // 9..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000001Edx, u32, {
+    // 0..=10 reserved
+    /// SYSCALL/SYSRET.**
+    ///
+    /// ** Intel processors support SYSCALL and SYSRET only in 64-bit mode. This feature flag is 
+    /// always enumerated as 0 outside 64-bit mode.
+    syscall_sysret: 11,
+    // 12..=19 reserved
+    /// Execute Disable Bit available.
+    execute_disable_bit: 20,
+    // 21..=25 reserved
+    /// 1-GByte pages are available if 1.
+    pages_1g: 26,
+    /// RDTSCP and IA32_TSC_AUX are available if 1.
+    rdtscp_and_ia32_tsc_aux: 27,
+    // Reserved.
+    /// Intel® 64 Architecture available if 1.
+    arch64: 29,
+    // 30..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000002
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000002Eax, u32, {
+    /// Processor Brand String.
+    processor_brand_string: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000002Ebx, u32, {
+    /// Processor Brand String Continued.
+    processor_brand_string: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000002Ecx, u32, {
+    /// Processor Brand String Continued.
+    processor_brand_string: 0..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000002Edx, u32, {
+    /// Processor Brand String Continued.
+    processor_brand_string: 0..32,
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000005
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000005Eax, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000005Ebx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000005Ecx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000005Edx, u32, {
+    // Reserved.
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000006
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000006Eax, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000006Ebx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000006Ecx, u32, {
+    /// Cache Line size in bytes.
+    cache_line_size: 0..8,
+    // 8..=11 reserved
+    /// L2 Associativity field *.
+    ///
+    /// * L2 associativity field encodings:
+    /// - 00H - Disabled 08H - 16 ways
+    /// - 01H - 1 way (direct mapped) 09H - Reserved
+    /// - 02H - 2 ways 0AH - 32 ways
+    /// - 03H - Reserved 0BH - 48 ways
+    /// - 04H - 4 ways 0CH - 64 ways
+    /// - 05H - Reserved 0DH - 96 ways
+    /// - 06H - 8 ways 0EH - 128 ways
+    /// - 07H - See CPUID leaf 04H, sub-leaf 2** 0FH - Fully associative
+    ///
+    /// ** CPUID leaf 04H provides details of deterministic cache parameters, including the L2 cache 
+    /// in sub-leaf 2
+    l2_associativity: 12..16,
+    /// Cache size in 1K units.
+    cache_size_1k_units: 16..32,
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000006Edx, u32, {
+    // Reserved.
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000007
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000007Eax, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000007Ebx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000007Ecx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000007Edx, u32, {
+    // 0..=7 reserved
+    invariant_tsc: 8,
+    // 9..=31 reserved
+});
+// -------------------------------------------------------------------------------------------------
+// Leaf 80000008
+// -------------------------------------------------------------------------------------------------
+#[rustfmt::skip]
+bitfield!(Leaf80000008Eax, u32, {
+    /// #Physical Address Bits*.
+    ///
+    /// * If CPUID.80000008H:EAX[7:0] is supported, the maximum physical address number supported 
+    /// should come from this field.
+    physical_address_bits: 0..8,
+    /// #Linear Address Bits.
+    linear_address_bits: 8..16,
+    // 8..=31 reserved
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000008Ebx, u32, {
+    // 0..=8 reserved
+    wbnoinvd: 9,
+    // 10..=31 reserved
+
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000008Ecx, u32, {
+    // Reserved.
+});
+#[rustfmt::skip]
+bitfield!(Leaf80000008Edx, u32, {
+    // Reserved.
+});
+// -------------------------------------------------------------------------------------------------
 // Leaf types
 // -------------------------------------------------------------------------------------------------
+/// A generic leaf formed of 4 members `eax`, `ebx`, `ecx` and `edx`.
 #[derive(Debug)]
 pub struct Leaf<A, B, C, D> {
     pub eax: A,
@@ -1522,6 +2189,45 @@ type Leaf14Subleaf0 =
     Leaf<Leaf14Subleaf0Eax, Leaf14Subleaf0Ebx, Leaf14Subleaf0Ecx, Leaf14Subleaf0Edx>;
 type Leaf14Subleaf1 =
     Leaf<Leaf14Subleaf1Eax, Leaf14Subleaf1Ebx, Leaf14Subleaf1Ecx, Leaf14Subleaf1Edx>;
+type Leaf15 = Leaf<Leaf15Eax, Leaf15Ebx, Leaf15Ecx, Leaf15Edx>;
+type Leaf16 = Leaf<Leaf16Eax, Leaf16Ebx, Leaf16Ecx, Leaf16Edx>;
+type Leaf17 = (
+    Leaf17Subleaf0,
+    Leaf17Subleaf1,
+    Leaf17Subleaf2,
+    Leaf17Subleaf3,
+    Vec<Leaf17SubleafGt3>,
+);
+type Leaf17Subleaf0 =
+    Leaf<Leaf17Subleaf0Eax, Leaf17Subleaf0Ebx, Leaf17Subleaf0Ecx, Leaf17Subleaf0Edx>;
+type Leaf17Subleaf1 =
+    Leaf<Leaf17Subleaf1Eax, Leaf17Subleaf1Ebx, Leaf17Subleaf1Ecx, Leaf17Subleaf1Edx>;
+type Leaf17Subleaf2 = Leaf17Subleaf1;
+type Leaf17Subleaf3 = Leaf17Subleaf1;
+type Leaf17SubleafGt3 =
+    Leaf<Leaf17SubleafGt3Eax, Leaf17SubleafGt3Ebx, Leaf17SubleafGt3Ecx, Leaf17SubleafGt3Edx>;
+type Leaf18 = (Leaf18Subleaf0, Vec<Leaf18SubleafGt0>);
+type Leaf18Subleaf0 =
+    Leaf<Leaf18Subleaf0Eax, Leaf18Subleaf0Ebx, Leaf18Subleaf0Ecx, Leaf18Subleaf0Edx>;
+type Leaf18SubleafGt0 =
+    Leaf<Leaf18SubleafGt0Eax, Leaf18SubleafGt0Ebx, Leaf18SubleafGt0Ecx, Leaf18SubleafGt0Edx>;
+type Leaf19 = Leaf<Leaf19Eax, Leaf19Ebx, Leaf19Ecx, Leaf19Edx>;
+type Leaf1A = Leaf<Leaf1AEax, Leaf1AEbx, Leaf1AEcx, Leaf1AEdx>;
+// TODO I need to investigate the layout of this leaf
+type Leaf1B = Leaf<Leaf1BEax, Leaf1BEbx, Leaf1BEcx, Leaf1BEdx>;
+type Leaf1C = Leaf<Leaf1CEax, Leaf1CEbx, Leaf1CEcx, Leaf1CEdx>;
+type Leaf1F = Leaf<Leaf1FEax, Leaf1FEbx, Leaf1FEcx, Leaf1FEdx>;
+// TODO I need to investigate the layout of this leaf
+type Leaf20 = Leaf<Leaf20Eax, Leaf20Ebx, Leaf20Ecx, Leaf20Edx>;
+type Leaf80000000 = Leaf<Leaf80000000Eax, Leaf80000000Ebx, Leaf80000000Ecx, Leaf80000000Edx>;
+type Leaf80000001 = Leaf<Leaf80000001Eax, Leaf80000001Ebx, Leaf80000001Ecx, Leaf80000001Edx>;
+type Leaf80000002 = Leaf<Leaf80000002Eax, Leaf80000002Ebx, Leaf80000002Ecx, Leaf80000002Edx>;
+type Leaf80000003 = Leaf80000002;
+type Leaf80000004 = Leaf80000002;
+type Leaf80000005 = Leaf<Leaf80000005Eax, Leaf80000005Ebx, Leaf80000005Ecx, Leaf80000005Edx>;
+type Leaf80000006 = Leaf<Leaf80000006Eax, Leaf80000006Ebx, Leaf80000006Ecx, Leaf80000006Edx>;
+type Leaf80000007 = Leaf<Leaf80000007Eax, Leaf80000007Ebx, Leaf80000007Ecx, Leaf80000007Edx>;
+type Leaf80000008 = Leaf<Leaf80000008Eax, Leaf80000008Ebx, Leaf80000008Ecx, Leaf80000008Edx>;
 // -------------------------------------------------------------------------------------------------
 // Supports
 // -------------------------------------------------------------------------------------------------
@@ -1700,6 +2406,20 @@ impl Leaf14Subleaf1 {
         todo!()
     }
 }
+impl Leaf15 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
+impl Leaf16 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        todo!()
+    }
+}
 
 // -------------------------------------------------------------------------------------------------
 // Intel cpuid structure
@@ -1754,8 +2474,79 @@ pub struct IntelCpuid {
     /// Intel SGX EPC Enumeration
     pub leaf_12: Leaf12,
     /// Intel Processor Trace Enumeration
-    pub leaf_14: Leaf14, /* /// Time Stamp Counter and Nominal Core Crystal Clock Information
-                          * pub */
+    pub leaf_14: Leaf14,
+    /// Time Stamp Counter and Nominal Core Crystal Clock Information
+    pub leaf_15: Leaf15,
+    /// Processor Frequency Information
+    pub leaf_16: Leaf16,
+    /// System-On-Chip Vendor Attribute Enumeration
+    pub leaf_17: Option<Leaf17>,
+    /// Deterministic Address Translation Parameters
+    ///
+    /// ## Notes
+    ///
+    /// Each sub-leaf enumerates a different address translation structure. If ECX contains an
+    /// invalid sub-leaf index, EAX/EBX/ECX/EDX return 0. Sub-leaf index n is invalid if n
+    /// exceeds the value that sub-leaf 0 returns in EAX. A sub-leaf index is also invalid if
+    /// EDX[4:0] returns 0. Valid sub-leaves do not need to be contiguous or in any particular
+    /// order. A valid sub-leaf may be in a higher input ECX value than an invalid sub-leaf or
+    /// than a valid sub-leaf of a higher or lower-level structure.
+    pub leaf_18: Option<Leaf18>,
+    /// Key Locker
+    pub leaf_19: Option<Leaf19>,
+    /// Hybrid Information
+    pub leaf_1a: Option<Leaf1A>,
+    /// PCONFIG Information
+    pub leaf_1b: Option<Leaf1B>,
+    /// Last Branch Records Information
+    pub leaf_1c: Option<Leaf1C>,
+    /// V2 Extended Topology Enumeration
+    ///
+    /// ## Notes
+    ///
+    /// CPUID leaf 1FH is a preferred superset to leaf 0BH. Intel recommends first checking for the
+    /// existence of Leaf 1FH and using this if available. Most of Leaf 1FH output depends on the
+    /// initial value in ECX. The EDX output of leaf 1FH is always valid and does not vary with
+    /// input value in ECX. Output value in ECX[7:0] always equals input value in ECX[7:0].
+    /// Sub-leaf index 0 enumerates SMT level. Each subsequent higher sub-leaf index enumerates a
+    /// higherlevel topological entity in hierarchical order. For sub-leaves that return an invalid
+    /// level-type of 0 in ECX[15:8]; EAX and EBX will return 0. If an input value n in ECX returns
+    /// the invalid level-type of 0 in ECX[15:8], other input values with ECX >n also return 0 in
+    /// ECX[15:8].
+    pub leaf_1f: Vec<Leaf1F>,
+    /// Processor History Reset
+    pub leaf_20: Option<Leaf20>,
+    // Leaf 21 is unimplemented, described by intel with:
+    // ```text
+    // Invalid. No existing or future CPU will return processor identification or feature
+    // information if the initial EAX value is 21H. If the value returned by CPUID.0:EAX (the
+    // maximum input value for basic CPUID information) is at least 21H, 0 is returned in the
+    // registers EAX, EBX, ECX, and EDX. Otherwise, the data for the highest basic information leaf
+    // is returned.
+    // ```
+    // Leaves 40000000H to 4FFFFFFFH are unimplemented, described by intel with:
+    // ```text
+    // Invalid. No existing or future CPU will return processor identification or feature
+    // information if the initial EAX value is in the range 40000000H to 4FFFFFFFH.
+    // ```
+    /// Extended Function CPUID Information
+    pub leaf_80000000: Leaf80000000,
+    /// Extended Function CPUID Information
+    pub leaf_80000001: Leaf80000001,
+    /// Extended Function CPUID Information
+    pub leaf_80000002: Leaf80000002,
+    /// Extended Function CPUID Information
+    pub leaf_80000003: Leaf80000003,
+    /// Extended Function CPUID Information
+    pub leaf_80000004: Leaf80000004,
+    /// Extended Function CPUID Information
+    pub leaf_80000005: Leaf80000005,
+    /// Extended Function CPUID Information
+    pub leaf_80000006: Leaf80000006,
+    /// Extended Function CPUID Information
+    pub leaf_80000007: Leaf80000007,
+    /// Extended Function CPUID Information
+    pub leaf_80000008: Leaf80000008,
 }
 impl IntelCpuid {
     #[logfn(Trace)]
@@ -1799,7 +2590,7 @@ impl From<RawCpuid> for IntelCpuid {
         // for i in 0..15 {
         //     println!("raw_cpuid[{}].ebx: {}",i,raw_cpuid[i].ebx);
         // }
-        debug_assert_eq!(Some(&raw_cpuid[leaf_7_start]), raw_cpuid.get(7, 0));
+        debug_assert_eq!(Some(&raw_cpuid[leaf_7_start]), raw_cpuid.get(0x7, 0));
         let leaf_7_len = raw_cpuid[leaf_7_start].eax as usize;
         dbg!(leaf_7_len);
         debug_assert!(leaf_7_len == 0 || leaf_7_len == 1);
@@ -1835,6 +2626,7 @@ impl From<RawCpuid> for IntelCpuid {
             ))];
             while vec[vec.len() - 1].ecx.level_type != 0u32 {
                 leaf_b_offset += 1;
+                debug_assert_eq!(raw_cpuid[leaf_b_offset].function, 0xB);
                 vec.push(LeafB::from((
                     LeafBEax::from(raw_cpuid[leaf_b_offset].eax),
                     LeafBEbx::from(raw_cpuid[leaf_b_offset].ebx),
@@ -1866,7 +2658,7 @@ impl From<RawCpuid> for IntelCpuid {
         };
 
         let leaf_f_start = leaf_d_offset + 2;
-        debug_assert_eq!(Some(&raw_cpuid[leaf_f_start]), raw_cpuid.get(15, 0));
+        debug_assert_eq!(Some(&raw_cpuid[leaf_f_start]), raw_cpuid.get(0xf, 0));
         let mut leaf_f_offset = leaf_f_start;
         let leaf_f = {
             let subleaf0 = LeafFSubleaf0::from((
@@ -1887,7 +2679,7 @@ impl From<RawCpuid> for IntelCpuid {
             (subleaf0, subleaf1)
         };
         let leaf_10_start = leaf_f_offset + 1;
-        debug_assert_eq!(Some(&raw_cpuid[leaf_10_start]), raw_cpuid.get(16, 0));
+        debug_assert_eq!(Some(&raw_cpuid[leaf_10_start]), raw_cpuid.get(0x10, 0));
         let mut leaf10_offset = leaf_10_start;
         let leaf_10 = {
             let subleaf0 = Leaf10Subleaf0::from((
@@ -1930,7 +2722,7 @@ impl From<RawCpuid> for IntelCpuid {
 
         let leaf_12_start = leaf10_offset + 2;
         let leaf_12_offset = leaf_12_start;
-        debug_assert_eq!(Some(&raw_cpuid[leaf_12_start]), raw_cpuid.get(18, 0));
+        debug_assert_eq!(Some(&raw_cpuid[leaf_12_start]), raw_cpuid.get(0x12, 0));
         let leaf_12 = {
             let subleaf0 = Leaf12Subleaf0::from((
                 Leaf12Subleaf0Eax::from(raw_cpuid[leaf_12_start].eax),
@@ -1941,10 +2733,7 @@ impl From<RawCpuid> for IntelCpuid {
             // Leaf 12H sub-leaf 1 (ECX = 1) is supported if CPUID.(EAX=07H, ECX=0H):EBX[SGX] = 1.
             dbg!(leaf_7.0.ebx.sgx);
             let (subleaf1, subleaf2) = if leaf_7.0.ebx.sgx == true {
-                unimplemented!(
-                    "Due to vagueness surrounding the number of subleaves this is currently not \
-                     supported"
-                );
+                unimplemented!("Due to vagueness surrounding the number of subleaves");
                 // leaf_12_offset += 1;
                 // (
                 //     Some(Leaf12Subleaf1::from((
@@ -1955,7 +2744,9 @@ impl From<RawCpuid> for IntelCpuid {
                 //     ))),
                 //     Vec::new(),
                 // )
-            } else { (None,Vec::new()) };
+            } else {
+                (None, Vec::new())
+            };
             // Leaf 12H sub-leaf 2 or higher (ECX >= 2) is supported if
             // CPUID.(EAX=07H, ECX=0H):EBX[SGX] = 1.
             //
@@ -1966,7 +2757,7 @@ impl From<RawCpuid> for IntelCpuid {
 
         let leaf_14_start = leaf_12_offset + 2;
         let mut leaf_14_offset = leaf_14_start;
-        debug_assert_eq!(Some(&raw_cpuid[leaf_14_start]), raw_cpuid.get(19, 0));
+        debug_assert_eq!(Some(&raw_cpuid[leaf_14_start]), raw_cpuid.get(0x14, 0));
         let leaf_14 = {
             let subleaf0 = Leaf14Subleaf0::from((
                 Leaf14Subleaf0Eax::from(raw_cpuid[leaf_14_start].eax),
@@ -1975,7 +2766,6 @@ impl From<RawCpuid> for IntelCpuid {
                 Leaf14Subleaf0Edx::from(raw_cpuid[leaf_14_start].edx),
             ));
             let subleaf1 = match u32::from(&subleaf0.eax.max_subleaf) {
-                
                 1 => {
                     leaf_14_offset += 1;
                     Some(Leaf14Subleaf1::from((
@@ -1993,6 +2783,110 @@ impl From<RawCpuid> for IntelCpuid {
             };
             (subleaf0, subleaf1)
         };
+        debug_assert_eq!(Some(&raw_cpuid[leaf_14_start + 1]), raw_cpuid.get(0x15, 0));
+        debug_assert_eq!(Some(&raw_cpuid[leaf_14_start + 2]), raw_cpuid.get(0x16, 0));
+        // All leaves we define below here are not properly defined
+        let leaf_17_start = leaf_14_start + 3;
+        let (leaf_17, leaf_17_offset) = if raw_cpuid[leaf_17_start].function == 0x17 {
+            todo!()
+        } else {
+            (None, leaf_17_start - 1)
+        };
+        let leaf_18_start = leaf_17_offset + 1;
+        let (leaf_18, leaf_18_offset) = if raw_cpuid[leaf_18_start].function == 0x18 {
+            todo!()
+        } else {
+            (None, leaf_18_start - 1)
+        };
+        let leaf_19_start = leaf_18_offset + 1;
+        let (leaf_19, leaf_19_offset) = if raw_cpuid[leaf_19_start].function == 0x19 {
+            todo!()
+        } else {
+            (None, leaf_19_start - 1)
+        };
+        let leaf_1a_start = leaf_19_offset + 1;
+        let (leaf_1a, leaf_1a_offset) = if raw_cpuid[leaf_1a_start].function == 0x1A {
+            todo!()
+        } else {
+            (None, leaf_1a_start - 1)
+        };
+        let leaf_1b_start = leaf_1a_offset + 1;
+        let (leaf_1b, leaf_1b_offset) = if raw_cpuid[leaf_1b_start].function == 0x1B {
+            todo!()
+        } else {
+            (None, leaf_1b_start - 1)
+        };
+        let leaf_1c_start = leaf_1b_offset + 1;
+        let (leaf_1c, leaf_1c_offset) = if raw_cpuid[leaf_1c_start].function == 0x1C {
+            todo!()
+        } else {
+            (None, leaf_1c_start - 1)
+        };
+        let leaf_1f_start = leaf_1c_offset + 1;
+        let (leaf_1f, leaf_1f_offset) = if raw_cpuid[leaf_1f_start].function == 0x1B {
+            let mut leaf_1f_offset = leaf_1f_start;
+            let mut vec = vec![Leaf1F::from((
+                Leaf1FEax::from(raw_cpuid[leaf_1f_offset].eax),
+                Leaf1FEbx::from(raw_cpuid[leaf_1f_offset].ebx),
+                Leaf1FEcx::from(raw_cpuid[leaf_1f_offset].ecx),
+                Leaf1FEdx::from(raw_cpuid[leaf_1f_offset].edx),
+            ))];
+            while vec[vec.len() - 1].ecx.level_type != 0u32 {
+                leaf_1f_offset += 1;
+                debug_assert_eq!(raw_cpuid[leaf_1f_offset].function, 0x1B);
+                vec.push(Leaf1F::from((
+                    Leaf1FEax::from(raw_cpuid[leaf_1f_offset].eax),
+                    Leaf1FEbx::from(raw_cpuid[leaf_1f_offset].ebx),
+                    Leaf1FEcx::from(raw_cpuid[leaf_1f_offset].ecx),
+                    Leaf1FEdx::from(raw_cpuid[leaf_1f_offset].edx),
+                )));
+            }
+            (vec, leaf_1f_offset)
+        } else {
+            (Vec::new(), leaf_1f_start - 1)
+        };
+        let leaf_20_start = leaf_1f_offset + 1;
+        let (leaf_20, leaf_20_offset) = if raw_cpuid[leaf_20_start].function == 0x20 {
+            todo!()
+        } else {
+            (None, leaf_20_start - 1)
+        };
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 1]),
+            raw_cpuid.get(0x8000_0000, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 2]),
+            raw_cpuid.get(0x8000_0001, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 3]),
+            raw_cpuid.get(0x8000_0002, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 4]),
+            raw_cpuid.get(0x8000_0003, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 5]),
+            raw_cpuid.get(0x8000_0004, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 6]),
+            raw_cpuid.get(0x8000_0005, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 7]),
+            raw_cpuid.get(0x8000_0006, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 8]),
+            raw_cpuid.get(0x8000_0007, 0)
+        );
+        debug_assert_eq!(
+            Some(&raw_cpuid[leaf_20_offset + 9]),
+            raw_cpuid.get(0x8000_0008, 0)
+        );
 
         Self {
             leaf_0: Leaf0::from((
@@ -2059,6 +2953,80 @@ impl From<RawCpuid> for IntelCpuid {
             leaf_10,
             leaf_12,
             leaf_14,
+            leaf_15: Leaf15::from((
+                Leaf15Eax::from(raw_cpuid[leaf_14_offset + 1].eax),
+                Leaf15Ebx::from(raw_cpuid[leaf_14_offset + 1].ebx),
+                Leaf15Ecx::from(raw_cpuid[leaf_14_offset + 1].ecx),
+                Leaf15Edx::from(raw_cpuid[leaf_14_offset + 1].edx),
+            )),
+            leaf_16: Leaf16::from((
+                Leaf16Eax::from(raw_cpuid[leaf_14_offset + 2].eax),
+                Leaf16Ebx::from(raw_cpuid[leaf_14_offset + 2].ebx),
+                Leaf16Ecx::from(raw_cpuid[leaf_14_offset + 2].ecx),
+                Leaf16Edx::from(raw_cpuid[leaf_14_offset + 2].edx),
+            )),
+            leaf_17,
+            leaf_18,
+            leaf_19,
+            leaf_1a,
+            leaf_1b,
+            leaf_1c,
+            leaf_1f,
+            leaf_20,
+            leaf_80000000: Leaf80000000::from((
+                Leaf80000000Eax::from(raw_cpuid[leaf_20_offset + 1].eax),
+                Leaf80000000Ebx::from(raw_cpuid[leaf_20_offset + 1].ebx),
+                Leaf80000000Ecx::from(raw_cpuid[leaf_20_offset + 1].ecx),
+                Leaf80000000Edx::from(raw_cpuid[leaf_20_offset + 1].edx),
+            )),
+            leaf_80000001: Leaf80000001::from((
+                Leaf80000001Eax::from(raw_cpuid[leaf_20_offset + 2].eax),
+                Leaf80000001Ebx::from(raw_cpuid[leaf_20_offset + 2].ebx),
+                Leaf80000001Ecx::from(raw_cpuid[leaf_20_offset + 2].ecx),
+                Leaf80000001Edx::from(raw_cpuid[leaf_20_offset + 2].edx),
+            )),
+            leaf_80000002: Leaf80000002::from((
+                Leaf80000002Eax::from(raw_cpuid[leaf_20_offset + 3].eax),
+                Leaf80000002Ebx::from(raw_cpuid[leaf_20_offset + 3].ebx),
+                Leaf80000002Ecx::from(raw_cpuid[leaf_20_offset + 3].ecx),
+                Leaf80000002Edx::from(raw_cpuid[leaf_20_offset + 3].edx),
+            )),
+            leaf_80000003: Leaf80000003::from((
+                Leaf80000002Eax::from(raw_cpuid[leaf_20_offset + 4].eax),
+                Leaf80000002Ebx::from(raw_cpuid[leaf_20_offset + 4].ebx),
+                Leaf80000002Ecx::from(raw_cpuid[leaf_20_offset + 4].ecx),
+                Leaf80000002Edx::from(raw_cpuid[leaf_20_offset + 4].edx),
+            )),
+            leaf_80000004: Leaf80000004::from((
+                Leaf80000002Eax::from(raw_cpuid[leaf_20_offset + 5].eax),
+                Leaf80000002Ebx::from(raw_cpuid[leaf_20_offset + 5].ebx),
+                Leaf80000002Ecx::from(raw_cpuid[leaf_20_offset + 5].ecx),
+                Leaf80000002Edx::from(raw_cpuid[leaf_20_offset + 5].edx),
+            )),
+            leaf_80000005: Leaf80000005::from((
+                Leaf80000005Eax::from(raw_cpuid[leaf_20_offset + 6].eax),
+                Leaf80000005Ebx::from(raw_cpuid[leaf_20_offset + 6].ebx),
+                Leaf80000005Ecx::from(raw_cpuid[leaf_20_offset + 6].ecx),
+                Leaf80000005Edx::from(raw_cpuid[leaf_20_offset + 6].edx),
+            )),
+            leaf_80000006: Leaf80000006::from((
+                Leaf80000006Eax::from(raw_cpuid[leaf_20_offset + 7].eax),
+                Leaf80000006Ebx::from(raw_cpuid[leaf_20_offset + 7].ebx),
+                Leaf80000006Ecx::from(raw_cpuid[leaf_20_offset + 7].ecx),
+                Leaf80000006Edx::from(raw_cpuid[leaf_20_offset + 7].edx),
+            )),
+            leaf_80000007: Leaf80000007::from((
+                Leaf80000007Eax::from(raw_cpuid[leaf_20_offset + 8].eax),
+                Leaf80000007Ebx::from(raw_cpuid[leaf_20_offset + 8].ebx),
+                Leaf80000007Ecx::from(raw_cpuid[leaf_20_offset + 8].ecx),
+                Leaf80000007Edx::from(raw_cpuid[leaf_20_offset + 8].edx),
+            )),
+            leaf_80000008: Leaf80000008::from((
+                Leaf80000008Eax::from(raw_cpuid[leaf_20_offset + 9].eax),
+                Leaf80000008Ebx::from(raw_cpuid[leaf_20_offset + 9].ebx),
+                Leaf80000008Ecx::from(raw_cpuid[leaf_20_offset + 9].ecx),
+                Leaf80000008Edx::from(raw_cpuid[leaf_20_offset + 9].edx),
+            )),
         }
     }
 }

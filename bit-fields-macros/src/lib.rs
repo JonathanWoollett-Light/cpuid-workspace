@@ -4,7 +4,7 @@ use std::fmt::Write;
 
 use proc_macro::{Delimiter, Group, TokenStream, TokenTree};
 
-// TODO Allow writing rustdoc comments on structs
+// TODO Allow writing rustdoc comments on bitfield structs
 
 /// Procedural macro to generate bit fields.
 ///

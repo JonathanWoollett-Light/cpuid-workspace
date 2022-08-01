@@ -1,3 +1,6 @@
+#![warn(clippy::pedantic)]
+#![allow(unused_variables, unreachable_code)] // To avoid warning on todo's for now
+#![allow(clippy::similar_names, clippy::module_name_repetitions)]
 use std::fmt;
 
 use bit_fields::bitfield;
@@ -2286,7 +2289,7 @@ impl Leaf1 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
-        self.ebx.clflush >= other.ebx.clfush
+        self.ebx.clflush >= other.ebx.clflush
             && self.ebx.max_addressable_logical_processor_ids
                 >= other.ebx.max_addressable_logical_processor_ids
             && self.ecx.superset(&other.ecx)
@@ -2363,6 +2366,7 @@ impl Leaf9 {
     pub fn supports(&self, other: &Self) -> bool {
         // TODO Can we use `>=` here instead?
         // TODO ia32_platform_dca_c0BHap_msr
+        todo!()
     }
 }
 impl LeafA {
@@ -2449,22 +2453,28 @@ impl Leaf12Subleaf0 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
-        self.eax.supports(&other.eax)
+        self.eax.superset(&other.eax)
             && todo!()
             && self.edx.max_enclave_size_not_64 >= other.edx.max_enclave_size_not_64
-            && self.edx.max_enclave_size_64 >= other.max_enclave_size_64
+            && self.edx.max_enclave_size_64 >= other.edx.max_enclave_size_64
     }
 }
 impl Leaf12Subleaf1 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
-        superset_u32(self.eax.ecreate_attrs_0_31, other.eax.ecreate_attrs_0_31)
-            && superset_u32(self.ebx.ecreate_attrs_32_63, other.ebx.ecreate_attrs_32_63)
-            && superset_u32(self.ecx.ecreate_attrs_64_95, other.ecx.ecreate_attrs_64_95)
+        superset_u32(&self.eax.ecreate_attrs_0_31, &other.eax.ecreate_attrs_0_31)
             && superset_u32(
-                self.edx.ecreate_attrs_96_127,
-                other.edx.ecreate_attrs_96_127,
+                &self.ebx.ecreate_attrs_32_63,
+                &other.ebx.ecreate_attrs_32_63,
+            )
+            && superset_u32(
+                &self.ecx.ecreate_attrs_64_95,
+                &other.ecx.ecreate_attrs_64_95,
+            )
+            && superset_u32(
+                &self.edx.ecreate_attrs_96_127,
+                &other.edx.ecreate_attrs_96_127,
             )
     }
 }
@@ -2564,7 +2574,14 @@ impl Leaf1B {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
-        superset_u32(self.eax.lbr_depth_values, other.lbr_depth_values)
+        todo!()
+    }
+}
+impl Leaf1C {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        superset_u32(&self.eax.lbr_depth_values, &other.eax.lbr_depth_values)
             && self.eax.superset(&other.eax)
             && self.ebx.superset(&other.ebx)
             && self.ecx.superset(&other.ecx)
@@ -2622,6 +2639,13 @@ impl Leaf80000006 {
     }
 }
 impl Leaf80000007 {
+    #[logfn(Trace)]
+    #[logfn_inputs(Info)]
+    pub fn supports(&self, other: &Self) -> bool {
+        self.edx.superset(&other.edx)
+    }
+}
+impl Leaf80000008 {
     #[logfn(Trace)]
     #[logfn_inputs(Info)]
     pub fn supports(&self, other: &Self) -> bool {
@@ -2765,70 +2789,100 @@ impl IntelCpuid {
         self.leaf_1.supports(&other.leaf_1) &&
         self.leaf_2.supports(&other.leaf_2) &&
         self.leaf_3.supports(&other.leaf_3) &&
-        self.leaf_4.supports(&other.leaf_4) &&
+        // TODO self.leaf_4 supports
+        todo!() &&
         self.leaf_5.supports(&other.leaf_5) &&
         self.leaf_6.supports(&other.leaf_6) &&
         self.leaf_7.0.supports(&other.leaf_7.0) &&
-        match (self.leaf_7.1,other.leaf_7.1) {
-            (Some(a), Some(b)) => a.supports(&b),
+        match (&self.leaf_7.1,&other.leaf_7.1) {
+            (Some(a), Some(b)) => a.supports(b),
             (_, None) => true,
             (None, Some(_)) => false
         } &&
         self.leaf_9.supports(&other.leaf_9) &&
         self.leaf_a.supports(&other.leaf_a) &&
-        self.leaf_b.supports(&other.leaf_b) &&
+        // TODO self.leaf_b supports
+        todo!() &&
         self.leaf_d.0.supports(&other.leaf_d.0) &&
         self.leaf_d.1.supports(&other.leaf_d.1) &&
-        // self.leaf_d_2 supports
+        // TODO self.leaf_d_2 supports
         todo!() &&
         self.leaf_f.0.supports(&other.leaf_f.0) &&
-        match (self.leaf_f.1,other.leaf_f.1) {
-            (Some(a), Some(b)) => a.supports(&b),
+        match (&self.leaf_f.1,&other.leaf_f.1) {
+            (Some(a), Some(b)) => a.supports(b),
             (_, None) => true,
             (None, Some(_)) => false
         } &&
         self.leaf_10.0.supports(&other.leaf_10.0) &&
-        match (self.leaf_10.1,other.leaf_10.1) {
-            (Some(a), Some(b)) => a.supports(&b),
+        match (&self.leaf_10.1,&other.leaf_10.1) {
+            (Some(a), Some(b)) => a.supports(b),
             (_, None) => true,
             (None, Some(_)) => false
         } &&
-        match (self.leaf_10.2,other.leaf_10.2) {
-            (Some(a), Some(b)) => a.supports(&b),
+        match (&self.leaf_10.2,&other.leaf_10.2) {
+            (Some(a), Some(b)) => a.supports(b),
             (_, None) => true,
             (None, Some(_)) => false
         } &&
         self.leaf_12.0.supports(&other.leaf_12.0) &&
-        match (self.leaf_12.1,other.leaf_12.1) {
-            (Some(a), Some(b)) => a.supports(&b),
+        match (&self.leaf_12.1,&other.leaf_12.1) {
+            (Some(a), Some(b)) => a.supports(b),
             (_, None) => true,
             (None, Some(_)) => false
         } &&
-        // self.leaf_12.2 supports
+        // TODO self.leaf_12.2 supports
         todo!() &&
         self.leaf_14.0.supports(&other.leaf_14.0) &&
-        match (self.leaf_14.1,other.leaf_14.1) {
-            (Some(a), Some(b)) => a.supports(&b),
+        match (&self.leaf_14.1,&other.leaf_14.1) {
+            (Some(a), Some(b)) => a.supports(b),
             (_, None) => true,
             (None, Some(_)) => false
         } &&
         self.leaf_15.supports(&other.leaf_15) &&
         self.leaf_16.supports(&other.leaf_16) &&
-        self.leaf_17.0.supports(&other.leaf_17.0) &&
-        self.leaf_17.1.supports(&other.leaf_17.1) &&
-        self.leaf_17.2.supports(&other.leaf_17.2) &&
-        self.leaf_17.3.supports(&other.leaf_17.3) &&
-        // self.leaf_17.4 supports
+        match (&self.leaf_17,&other.leaf_17) {
+            // TODO self.leaf_17.4 supports
+            (Some(a), Some(b)) => a.0.supports(&b.0) &&
+                a.1.supports(&b.1) &&
+                a.2.supports(&b.2) &&
+                a.3.supports(&b.3) &&
+                todo!(),
+            (_, None) => true,
+            (_, Some(_)) => false,
+        } &&
+        match (&self.leaf_18,&other.leaf_18) {
+            // TODO self.leaf_18.1 supports
+            (Some(a), Some(b)) => a.0.supports(&b.0) && todo!(),
+            (_, None) => true,
+            (None, Some(_)) => false
+        } &&
+        match (&self.leaf_19,&other.leaf_19) {
+            (Some(a), Some(b)) => a.supports(b),
+            (_, None) => true,
+            (None, Some(_)) => false
+        } &&
+        match (&self.leaf_1a,&other.leaf_1a) {
+            (Some(a), Some(b)) => a.supports(b),
+            (_, None) => true,
+            (None, Some(_)) => false
+        } &&
+        match (&self.leaf_1b,&other.leaf_1b) {
+            (Some(a), Some(b)) => a.supports(b),
+            (_, None) => true,
+            (None, Some(_)) => false
+        } &&
+        match (&self.leaf_1c,&other.leaf_1c) {
+            (Some(a), Some(b)) => a.supports(b),
+            (_, None) => true,
+            (None, Some(_)) => false
+        } &&
+        // TODO self.leaf_1F supports
         todo!() &&
-        self.leaf_18.0.supports(&other.leaf_18.0) &&
-        // self.leaf_18.1 supports
-        todo!() &&
-        self.leaf_19.supports(&other.leaf_19) &&
-        self.leaf_1A.supports(&other.leaf_1A) &&
-        self.leaf_1B.supports(&other.leaf_1B) &&
-        self.leaf_1C.supports(&other.leaf_1C) &&
-        self.leaf_1F.supports(&other.leaf_1F) &&
-        self.leaf_20.supports(&other.leaf_20) &&
+        match (&self.leaf_20,&other.leaf_20) {
+            (Some(a), Some(b)) => a.supports(b),
+            (_, None) => true,
+            (None, Some(_)) => false
+        } &&
         self.leaf_80000000.supports(&other.leaf_80000000) &&
         self.leaf_80000001.supports(&other.leaf_80000001) &&
         self.leaf_80000002.supports(&other.leaf_80000002) &&
@@ -3007,9 +3061,9 @@ impl From<RawCpuid> for IntelCpuid {
                 Leaf12Subleaf0Edx::from(raw_cpuid[leaf_12_start].edx),
             ));
             // Leaf 12H sub-leaf 1 (ECX = 1) is supported if CPUID.(EAX=07H, ECX=0H):EBX[SGX] = 1.
-            dbg!(leaf_7.0.ebx.sgx);
+            dbg!(leaf_7.0.ebx.sgx == true);
             let (subleaf1, subleaf2) = if leaf_7.0.ebx.sgx == true {
-                unimplemented!("Due to vagueness surrounding the number of subleaves");
+                todo!("Due to vagueness surrounding the number of subleaves");
                 // leaf_12_offset += 1;
                 // (
                 //     Some(Leaf12Subleaf1::from((
@@ -3184,10 +3238,10 @@ impl From<RawCpuid> for IntelCpuid {
                 raw_cpuid[2].edx,
             )),
             leaf_3: Leaf3::from((
-                raw_cpuid[3].eax,
-                raw_cpuid[3].ebx,
-                raw_cpuid[3].ecx,
-                raw_cpuid[3].edx,
+                Leaf3Eax::from(raw_cpuid[3].eax),
+                Leaf3Ebx::from(raw_cpuid[3].ebx),
+                Leaf3Ecx::from(raw_cpuid[3].ecx),
+                Leaf3Edx::from(raw_cpuid[3].edx),
             )),
             leaf_4,
             leaf_5: Leaf5::from((
@@ -3318,8 +3372,9 @@ impl From<RawCpuid> for IntelCpuid {
 // -------------------------------------------------------------------------------------------------
 
 /// Returns true if all 1 bits in `b` are also 1s in `a`.
-pub const fn superset_u32(a: u32, b: u32) -> bool {
-    ((!a) & b) == 0
+pub fn superset_u32<T: Into<u32>>(a: T, b: T) -> bool {
+    let (x, y): (u32, u32) = (a.into(), b.into());
+    ((!x) & y) == 0
 }
 
 #[cfg(test)]
